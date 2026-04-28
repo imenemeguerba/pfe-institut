@@ -153,10 +153,13 @@ php artisan key:generate
 # 7. Exécuter les migrations
 php artisan migrate
 
-# 8. Compiler les assets
+# 8. Insérer les données initiales (admin + catégories)
+php artisan db:seed
+
+# 9. Compiler les assets
 npm run build
 
-# 9. Lancer le serveur
+# 10. Lancer le serveur
 php artisan serve
 ```
 
