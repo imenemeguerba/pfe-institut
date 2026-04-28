@@ -18,17 +18,19 @@ class User extends Authenticatable
      * Les attributs autorisés à l'écriture massive.
      */
     protected $fillable = [
-        'nom',
-        'prenom',
-        'email',
-        'role',
-        'telephone',
-        'date_naissance',
-        'experience',
-        'bio',
-        'photo',
-        'password',
-    ];
+    'nom',
+    'prenom',
+    'email',
+    'role',
+    'statut_compte',
+    'motif_statut',
+    'telephone',
+    'date_naissance',
+    'experience',
+    'bio',
+    'photo',
+    'password',
+];
 
     /**
      * Les attributs cachés lors de la sérialisation.
@@ -69,6 +71,23 @@ class User extends Authenticatable
     public function factures(): HasMany
     {
         return $this->hasMany(Facture::class, 'client_id');
+    }
+    /**
+     * Les demandes de suppression de cet utilisateur.
+     */
+    public function demandesSuppression(): HasMany
+    {
+        return $this->hasMany(DemandeSuppression::class);
+    }
+
+    /**
+     * La demande de suppression actuelle (en attente, s'il y en a une).
+     */
+    public function demandeSuppressionEnCours(): ?DemandeSuppression
+    {
+        return $this->demandesSuppression()
+            ->where('statut', 'en_attente')
+            ->first();
     }
 
     // =========================================================================
@@ -164,7 +183,29 @@ class User extends Authenticatable
     // =========================================================================
     // SCOPES
     // =========================================================================
+    /**
+     * Scope : comptes actifs (peuvent se connecter normalement).
+     */
+    public function scopeActifs($query)
+    {
+        return $query->where('statut_compte', 'actif');
+    }
 
+    /**
+     * Scope : comptes en attente de validation (esthéticiennes).
+     */
+    public function scopeEnAttenteValidation($query)
+    {
+        return $query->where('statut_compte', 'en_attente_validation');
+    }
+
+    /**
+     * Scope : comptes bloqués.
+     */
+    public function scopeBloques($query)
+    {
+        return $query->where('statut_compte', 'bloque');
+    }
     /**
      * Scope : filtrer par rôle.
      */
@@ -220,7 +261,37 @@ class User extends Authenticatable
 
         return $this->date_naissance->age >= 18;
     }
+    /**
+     * Vérifie si le compte est actif.
+     */
+    public function estActif(): bool
+    {
+        return $this->statut_compte === 'actif';
+    }
 
+    /**
+     * Vérifie si le compte est en attente de validation admin.
+     */
+    public function estEnAttenteValidation(): bool
+    {
+        return $this->statut_compte === 'en_attente_validation';
+    }
+
+    /**
+     * Vérifie si le compte est bloqué.
+     */
+    public function estBloque(): bool
+    {
+        return $this->statut_compte === 'bloque';
+    }
+
+    /**
+     * Vérifie si le compte peut se connecter.
+     */
+    public function peutSeConnecter(): bool
+    {
+        return $this->statut_compte === 'actif';
+    }
     /**
      * Vérifie si l'utilisateur est admin.
      */

@@ -24,9 +24,16 @@ namespace App\Models{
  * @property string|null $motif_refus
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $client
+ * @property-read \App\Models\User|null $estheticienne
+ * @property-read \App\Models\RendezVous|null $rendezVous
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis enAttente()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis publies()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis surEsthe()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis surInstitut()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis whereClientId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis whereCommentaire($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Avis whereCreatedAt($value)
@@ -71,6 +78,46 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $code
+ * @property string|null $description
+ * @property string $type_reduction
+ * @property int $valeur
+ * @property string $applicable_a
+ * @property \Illuminate\Support\Carbon $date_debut
+ * @property \Illuminate\Support\Carbon $date_fin
+ * @property int|null $limite_utilisation
+ * @property int $nombre_utilisations
+ * @property bool $actif
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Commande> $commandes
+ * @property-read int|null $commandes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RendezVous> $rendezVous
+ * @property-read int|null $rendez_vous_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo valides()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereActif($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereApplicableA($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereDateDebut($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereDateFin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereLimiteUtilisation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereNombreUtilisations($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereTypeReduction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CodePromo whereValeur($value)
+ */
+	class CodePromo extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property string $numero
  * @property int $client_id
  * @property string $statut
@@ -83,6 +130,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User $client
+ * @property-read \App\Models\CodePromo|null $codePromo
  * @property-read \App\Models\Facture|null $facture
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Produit> $produits
  * @property-read int|null $produits_count
@@ -106,6 +154,35 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Commande whereUpdatedAt($value)
  */
 	class Commande extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $statut
+ * @property string|null $motif_demande
+ * @property string|null $motif_refus
+ * @property \Illuminate\Support\Carbon|null $date_traitement
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression acceptees()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression enAttente()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression refusees()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression whereDateTraitement($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression whereMotifDemande($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression whereMotifRefus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression whereStatut($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DemandeSuppression whereUserId($value)
+ */
+	class DemandeSuppression extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -148,12 +225,18 @@ namespace App\Models{
  * @property int $montant_tva
  * @property int $montant_ttc
  * @property numeric $taux_tva
- * @property string $date_emission
+ * @property \Illuminate\Support\Carbon $date_emission
  * @property string|null $chemin_pdf
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $client
+ * @property-read \App\Models\Commande|null $commande
+ * @property-read \App\Models\RendezVous|null $rendezVous
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Facture deCommandes()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Facture deRdv()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Facture newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Facture newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Facture pourClient($clientId)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Facture query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Facture whereCheminPdf($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Facture whereClientId($value)
@@ -297,6 +380,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User $client
+ * @property-read \App\Models\CodePromo|null $codePromo
  * @property-read \App\Models\User $estheticienne
  * @property-read \App\Models\Facture|null $facture
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Service> $services
@@ -371,6 +455,8 @@ namespace App\Models{
  * @property string|null $prenom
  * @property string $email
  * @property string $role
+ * @property string $statut_compte
+ * @property string|null $motif_statut
  * @property string|null $telephone
  * @property \Illuminate\Support\Carbon|null $date_naissance
  * @property int|null $experience
@@ -381,11 +467,41 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Avis> $avis
+ * @property-read int|null $avis_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Avis> $avisRecus
+ * @property-read int|null $avis_recus_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Commande> $commandes
+ * @property-read int|null $commandes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DemandeSuppression> $demandesSuppression
+ * @property-read int|null $demandes_suppression_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Disponibilite> $disponibilites
+ * @property-read int|null $disponibilites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Facture> $factures
+ * @property-read int|null $factures_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Indisponibilite> $indisponibilites
+ * @property-read int|null $indisponibilites_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \App\Models\Panier|null $panier
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Produit> $produitsFavoris
+ * @property-read int|null $produits_favoris_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RendezVous> $rendezVous
+ * @property-read int|null $rendez_vous_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RendezVous> $rendezVousAssignes
+ * @property-read int|null $rendez_vous_assignes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Service> $servicesProposes
+ * @property-read int|null $services_proposes_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User actifs()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User admins()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User bloques()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User clients()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User enAttenteValidation()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User estheticiennes()
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User parRole(string $role)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereBio($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
@@ -394,12 +510,14 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereExperience($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereMotifStatut($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePhoto($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereStatutCompte($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTelephone($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  */
