@@ -18,8 +18,15 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nom',
+        'prenom',
         'email',
+        'role',
+        'telephone',
+        'date_naissance',
+        'experience',
+        'bio',
+        'photo',
         'password',
     ];
 
@@ -42,7 +49,52 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'date_naissance' => 'date',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Retourne le nom complet (prénom + nom).
+     */
+    public function fullName(): string
+    {
+        return trim($this->prenom . ' ' . $this->nom);
+    }
+
+    /**
+     * Vérifie si l'utilisateur est majeur (>= 18 ans).
+     */
+    public function isMajeur(): bool
+    {
+        if (!$this->date_naissance) {
+            return false;
+        }
+
+        return $this->date_naissance->age >= 18;
+    }
+
+    /**
+     * Vérifie si l'utilisateur est admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Vérifie si l'utilisateur est esthéticienne.
+     */
+    public function isEstheticienne(): bool
+    {
+        return $this->role === 'estheticienne';
+    }
+
+    /**
+     * Vérifie si l'utilisateur est client.
+     */
+    public function isClient(): bool
+    {
+        return $this->role === 'client';
     }
 }

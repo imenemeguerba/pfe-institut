@@ -25,10 +25,14 @@ class AdminSeeder extends Seeder
 
         // Créer le compte admin
         DB::table('users')->insert([
-            'name' => 'Administrateur',
+            'nom' => 'Administrateur',
+            'prenom' => null,
             'email' => 'admin@institut-beaute.dz',
             'role' => 'admin',
             'telephone' => '0555000000',
+            'date_naissance' => null,
+            'experience' => null,
+            'bio' => null,
             'photo' => null,
             'email_verified_at' => now(),
             'password' => Hash::make('Imene@2026'),
