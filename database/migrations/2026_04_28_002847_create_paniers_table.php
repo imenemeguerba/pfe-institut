@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('paniers', function (Blueprint $table) {
+            $table->id();
+
+            // Le client propriétaire du panier
+            $table->foreignId('client_id')
+                  ->constrained('users')
+                  ->onDelete('cascade');
+
+            $table->timestamps();
+
+            // 1 seul panier par client
+            $table->unique('client_id');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('paniers');
+    }
+};
