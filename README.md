@@ -1,59 +1,203 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 💄 Création d'un site web dédié à la gestion d'un institut de beauté
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Projet de Fin d'Études — 2025/2026
 
-## About Laravel
+Application web complète permettant la gestion d'un institut de beauté : réservation de rendez-vous en ligne, gestion des services et du personnel, vente de produits cosmétiques, et tableau de bord administrateur.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 À propos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| | |
+|---|---|
+| **École** | École Supérieure de Technologie (HST) |
+| **Domaine** | Mathematics & Computer Science |
+| **Filière** | Computer Science |
+| **Spécialité** | Informatic Systems |
+| **Année universitaire** | 2025 / 2026 |
+| **Encadrante** | Mme.  |
+| **Étudiante** | Meguerba Imene |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🎯 Objectifs du projet
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Le projet vise à digitaliser la gestion d'un institut de beauté à travers une plateforme web qui permet :
 
-## Laravel Sponsors
+- Aux **clientes** de réserver leurs prestations en ligne, consulter les services, acheter des produits cosmétiques et laisser des avis
+- Aux **esthéticiennes** de gérer leur planning, traiter leurs rendez-vous et suivre leurs performances
+- À l'**administrateur** de superviser l'ensemble de l'activité : services, personnel, commandes, statistiques et facturation
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ✨ Fonctionnalités principales
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 👤 Espace Cliente
+- Inscription et authentification sécurisées (réservée aux personnes majeures)
+- Consultation et filtrage des services par catégorie, prix ou durée
+- Réservation de rendez-vous avec choix de l'esthéticienne
+- Gestion du panier et achat de produits cosmétiques
+- Système de favoris
+- Dépôt d'avis et notation des prestations
+- Consultation du niveau d'affluence en temps réel
+- Historique des rendez-vous et téléchargement de factures PDF
 
-## Contributing
+### 💅 Espace Esthéticienne
+- Inscription avec validation par l'administrateur
+- Gestion du planning et des disponibilités
+- Traitement des demandes de rendez-vous (accepter, refuser, reporter)
+- Consultation des performances et avis clients
+- Marquage des rendez-vous comme réalisés
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### ⚙️ Espace Administrateur
+- Gestion complète du catalogue (catégories, services, produits)
+- Validation des inscriptions des esthéticiennes
+- Gestion des comptes (clientes et esthéticiennes)
+- Modération des avis avant publication
+- Gestion des commandes et du stock
+- Création de codes promotionnels
+- Tableau de bord avec statistiques et indicateurs
+- Génération automatique de factures et rapports PDF
 
-## Code of Conduct
+### 🤖 Fonctionnalités automatiques
+- Rappel automatique 24h avant chaque rendez-vous
+- Vérification des conflits de créneaux
+- Calcul automatique de la durée totale d'un rendez-vous
+- Mise à jour automatique du stock après confirmation de commande
+- Notifications en temps réel pour tous les acteurs
+- Calcul automatique du niveau d'affluence
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🛠️ Technologies utilisées
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Backend
+| Technologie | Rôle |
+|---|---|
+| **Laravel 12** | Framework PHP principal |
+| **PHP 8.2+** | Langage backend |
+| **MySQL** | Système de gestion de base de données |
+| **Laravel Breeze** | Système d'authentification |
 
-## License
+### Frontend
+| Technologie | Rôle |
+|---|---|
+| **HTML5** | Structure des pages |
+| **CSS3** | Stylisation personnalisée |
+| **Blade** | Moteur de template Laravel |
+| **Tailwind CSS** | Stylisation des pages d'authentification (Breeze) |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Outils
+| Outil | Rôle |
+|---|---|
+| **Node.js** | Environnement d'exécution JavaScript |
+| **npm** | Gestionnaire de paquets |
+| **XAMPP** | Serveur local (MySQL) |
+| **Git & GitHub** | Versioning et hébergement du code |
+| **Visual Studio Code** | Éditeur de code |
+
+---
+
+## 🗄️ Architecture de la base de données
+
+Le projet repose sur une base de données relationnelle MySQL composée de **17 tables métier** organisées en modules :
+
+- **Authentification** : `users`
+- **Catalogue** : `categories`, `services`, `produits`
+- **Compétences** : `service_estheticienne`
+- **Planning** : `disponibilites`, `indisponibilites`
+- **Réservations** : `rendez_vous`, `rendez_vous_service`
+- **E-commerce** : `paniers`, `panier_produit`, `favoris`, `commandes`, `commande_produit`
+- **Promotions** : `codes_promo`
+- **Avis** : `avis`
+- **Facturation** : `factures`
+- **Système** : `notifications`
+
+---
+
+## 🚀 Installation
+
+### Prérequis
+
+- PHP 8.2 ou supérieur
+- Composer
+- Node.js (v18+) et npm
+- MySQL (via XAMPP ou autre)
+- Git
+
+### Étapes d'installation
+
+```bash
+# 1. Cloner le dépôt
+git clone https://github.com/imenemeguerba/pfe-institut.git
+cd pfe-institut
+
+# 2. Installer les dépendances PHP
+composer install
+
+# 3. Installer les dépendances JavaScript
+npm install
+
+# 4. Créer le fichier .env
+cp .env.example .env
+
+# 5. Générer la clé d'application
+php artisan key:generate
+
+# 6. Configurer la base de données dans .env
+# DB_DATABASE=pfe_institut
+# DB_USERNAME=root
+# DB_PASSWORD=
+# DB_PORT=3307
+
+# 7. Exécuter les migrations
+php artisan migrate
+
+# 8. Compiler les assets
+npm run build
+
+# 9. Lancer le serveur
+php artisan serve
+```
+
+L'application sera accessible sur `http://127.0.0.1:8000`
+
+---
+
+## 📅 État d'avancement
+
+- [x] Configuration de l'environnement de développement
+- [x] Conception de la base de données (17 tables)
+- [x] Migrations Laravel complètes
+- [x] Système d'authentification (Laravel Breeze)
+- [ ] Models Eloquent et relations
+- [ ] Seeders et données de test
+- [ ] Controllers et logique métier
+- [ ] Interface utilisateur (Views Blade)
+- [ ] Tests fonctionnels
+- [ ] Déploiement
+
+---
+
+## 📄 Documentation
+
+Ce projet est accompagné d'un mémoire de fin d'études détaillant :
+- Étude de l'existant
+- L'analyse des besoins
+- La conception (diagrammes UML : cas d'utilisation, séquences, classes)
+- L'implémentation
+- Les tests et la validation
+
+---
+
+## 👤 Auteur
+
+**Meguerba Imene**
+Étudiante en Informatic Systems
+École Supérieure de Technologie (HST)
+
+---
+
+## 📜 Licence
+
+Projet académique réalisé dans le cadre du Projet de Fin d'Études — Tous droits réservés © 2026
