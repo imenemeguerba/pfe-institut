@@ -27,6 +27,7 @@ class User extends Authenticatable
     'telephone',
     'date_naissance',
     'experience',
+    'specialites',
     'bio',
     'photo',
     'password',

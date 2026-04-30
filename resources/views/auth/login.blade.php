@@ -1,4 +1,10 @@
 <x-guest-layout>
+    {{-- Message de succès (ex: après inscription esthéticienne) --}}
+    @if (session('success'))
+        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -44,4 +50,13 @@
             </x-primary-button>
         </div>
     </form>
+    {{-- Lien inscription esthéticienne --}}
+    <div class="mt-6 pt-6 border-t border-gray-200 text-center">
+        <p class="text-sm text-gray-600">
+            Vous êtes esthéticienne ?
+            <a href="{{ route('register.esthe') }}" class="text-indigo-600 hover:text-indigo-800 underline">
+                Inscrivez-vous ici
+            </a>
+        </p>
+    </div>
 </x-guest-layout>

@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -22,8 +21,6 @@ class LoginRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -36,17 +33,53 @@ class LoginRequest extends FormRequest
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @throws ValidationException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
+        // Vérifier les credentials
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        // ⚠️ Vérifier le statut du compte APRÈS la vérification du mot de passe
+        $user = Auth::user();
+
+        if ($user->statut_compte === 'en_attente_validation') {
+            Auth::logout();
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => 'Votre compte est en attente de validation par l\'administrateur. Vous serez notifiée dès qu\'il sera activé.',
+            ]);
+        }
+
+        if ($user->statut_compte === 'desactive') {
+            $motif = $user->motif_statut ? ' Motif : ' . $user->motif_statut : '';
+            Auth::logout();
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => 'Votre compte a été désactivé.' . $motif,
+            ]);
+        }
+
+        if ($user->statut_compte === 'bloque') {
+            $motif = $user->motif_statut ? ' Motif : ' . $user->motif_statut : '';
+            Auth::logout();
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => 'Votre compte a été bloqué.' . $motif,
             ]);
         }
 
@@ -56,7 +89,7 @@ class LoginRequest extends FormRequest
     /**
      * Ensure the login request is not rate limited.
      *
-     * @throws ValidationException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function ensureIsNotRateLimited(): void
     {
