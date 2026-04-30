@@ -78,4 +78,36 @@ class Service extends Model
     {
         return $query->whereBetween('prix', [$min, $max]);
     }
+    /**
+     * Relation : un service peut être dans plusieurs RDV (N:N via pivot).
+     */
+    public function rendezVous(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(
+            RendezVous::class,
+            'rendez_vous_service',
+            'service_id',
+            'rendez_vous_id'
+        )->withPivot('prix_au_moment', 'duree_au_moment')
+         ->withTimestamps();
+    }
+    /**
+     * Retourne la durée formatée joliment (ex: "1h30", "45min", "2h").
+     */
+    public function dureeFormatee(): string
+    {
+        $heures = intdiv($this->duree, 60);
+        $minutes = $this->duree % 60;
+        
+        if ($heures === 0) {
+            return $minutes . 'min';
+        }
+        
+        if ($minutes === 0) {
+            return $heures . 'h';
+        }
+        
+        // Format "1h30" avec minutes sur 2 chiffres
+        return $heures . 'h' . str_pad($minutes, 2, '0', STR_PAD_LEFT);
+    }
 }

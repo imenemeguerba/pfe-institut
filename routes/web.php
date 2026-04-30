@@ -71,6 +71,11 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
         Route::patch('categories/{category}/toggle', [\App\Http\Controllers\Admin\CategoryController::class, 'toggleActif'])
             ->name('categories.toggle');
+
+        // Services — CRUD complet
+        Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class);
+        Route::patch('services/{service}/toggle', [\App\Http\Controllers\Admin\ServiceController::class, 'toggleActif'])
+            ->name('services.toggle');
     });
 
 /*
