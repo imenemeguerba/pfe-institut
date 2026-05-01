@@ -26,16 +26,16 @@
                 </div>
 
                 {{-- Esthéticiennes actives --}}
-                <div class="bg-white overflow-hidden shadow-sm rounded-lg p-6">
+                <a href="{{ route('admin.estheticiennes.index', ['filtre' => 'actives']) }}" class="bg-white overflow-hidden shadow-sm rounded-lg p-6 hover:shadow-md transition">
                     <div class="text-sm font-medium text-gray-500">Esthéticiennes actives</div>
                     <div class="mt-2 text-3xl font-bold text-gray-900">{{ $stats['total_estheticiennes'] }}</div>
-                </div>
+                </a>
 
                 {{-- Esthéticiennes en attente --}}
-                <div class="bg-white overflow-hidden shadow-sm rounded-lg p-6 {{ $stats['esthe_en_attente'] > 0 ? 'border-l-4 border-orange-500' : '' }}">
+                <a href="{{ route('admin.estheticiennes.index', ['filtre' => 'en_attente']) }}" class="bg-white overflow-hidden shadow-sm rounded-lg p-6 hover:shadow-md transition {{ $stats['esthe_en_attente'] > 0 ? 'border-l-4 border-orange-500' : '' }}">
                     <div class="text-sm font-medium text-gray-500">⏳ En attente de validation</div>
                     <div class="mt-2 text-3xl font-bold text-gray-900">{{ $stats['esthe_en_attente'] }}</div>
-                </div>
+                </a>
 
                 {{-- RDV aujourd'hui --}}
                 <div class="bg-white overflow-hidden shadow-sm rounded-lg p-6">

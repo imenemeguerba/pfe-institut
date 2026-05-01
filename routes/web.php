@@ -76,6 +76,23 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class);
         Route::patch('services/{service}/toggle', [\App\Http\Controllers\Admin\ServiceController::class, 'toggleActif'])
             ->name('services.toggle');
+        // Esthéticiennes — gestion admin
+        Route::get('estheticiennes', [\App\Http\Controllers\Admin\EstheticienneController::class, 'index'])
+            ->name('estheticiennes.index');
+        Route::get('estheticiennes/{estheticienne}', [\App\Http\Controllers\Admin\EstheticienneController::class, 'show'])
+            ->name('estheticiennes.show');
+        Route::patch('estheticiennes/{estheticienne}/accepter', [\App\Http\Controllers\Admin\EstheticienneController::class, 'accepter'])
+            ->name('estheticiennes.accepter');
+        Route::delete('estheticiennes/{estheticienne}/refuser', [\App\Http\Controllers\Admin\EstheticienneController::class, 'refuser'])
+            ->name('estheticiennes.refuser');
+        Route::patch('estheticiennes/{estheticienne}/desactiver', [\App\Http\Controllers\Admin\EstheticienneController::class, 'desactiver'])
+            ->name('estheticiennes.desactiver');
+        Route::patch('estheticiennes/{estheticienne}/reactiver', [\App\Http\Controllers\Admin\EstheticienneController::class, 'reactiver'])
+            ->name('estheticiennes.reactiver');
+        Route::patch('estheticiennes/{estheticienne}/services', [\App\Http\Controllers\Admin\EstheticienneController::class, 'updateServices'])
+            ->name('estheticiennes.services');
+        Route::delete('estheticiennes/{estheticienne}', [\App\Http\Controllers\Admin\EstheticienneController::class, 'destroy'])
+            ->name('estheticiennes.destroy');
     });
 
 /*
