@@ -51,6 +51,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Demandes de suppression de compte
+    Route::post('/profile/demande-suppression', [\App\Http\Controllers\DemandeSuppressionController::class, 'store'])
+        ->name('demande-suppression.store');
+    Route::delete('/profile/demande-suppression/{demande}', [\App\Http\Controllers\DemandeSuppressionController::class, 'annuler'])
+        ->name('demande-suppression.annuler');
 });
 
 /*
@@ -93,6 +99,15 @@ Route::middleware(['auth', 'verified', 'admin'])
             ->name('estheticiennes.services');
         Route::delete('estheticiennes/{estheticienne}', [\App\Http\Controllers\Admin\EstheticienneController::class, 'destroy'])
             ->name('estheticiennes.destroy');
+        // Demandes de suppression — gestion admin
+        Route::get('demandes-suppression', [\App\Http\Controllers\Admin\DemandeSuppressionController::class, 'index'])
+            ->name('demandes-suppression.index');
+        Route::get('demandes-suppression/{demande}', [\App\Http\Controllers\Admin\DemandeSuppressionController::class, 'show'])
+            ->name('demandes-suppression.show');
+        Route::patch('demandes-suppression/{demande}/accepter', [\App\Http\Controllers\Admin\DemandeSuppressionController::class, 'accepter'])
+            ->name('demandes-suppression.accepter');
+        Route::patch('demandes-suppression/{demande}/refuser', [\App\Http\Controllers\Admin\DemandeSuppressionController::class, 'refuser'])
+            ->name('demandes-suppression.refuser');
     });
 
 /*

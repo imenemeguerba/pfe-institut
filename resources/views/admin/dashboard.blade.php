@@ -56,10 +56,10 @@
                 </div>
 
                 {{-- Demandes suppression --}}
-                <div class="bg-white overflow-hidden shadow-sm rounded-lg p-6 {{ $stats['demandes_suppression'] > 0 ? 'border-l-4 border-orange-500' : '' }}">
+                <a href="{{ route('admin.demandes-suppression.index') }}" class="bg-white overflow-hidden shadow-sm rounded-lg p-6 hover:shadow-md transition {{ $stats['demandes_suppression'] > 0 ? 'border-l-4 border-orange-500' : '' }}">
                     <div class="text-sm font-medium text-gray-500">🗑️ Demandes de suppression</div>
                     <div class="mt-2 text-3xl font-bold text-gray-900">{{ $stats['demandes_suppression'] }}</div>
-                </div>
+                </a>
 
                 {{-- Stock critique --}}
                 <div class="bg-white overflow-hidden shadow-sm rounded-lg p-6 {{ $stats['produits_stock_critique'] > 0 ? 'border-l-4 border-red-500' : '' }}">

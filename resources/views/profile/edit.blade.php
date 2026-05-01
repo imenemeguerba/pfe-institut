@@ -21,7 +21,12 @@
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
+                    @if (Auth::user()->isClient() || Auth::user()->isEstheticienne())
+                        @include('profile.partials.demande-suppression-form')
+                    @else
+                        {{-- L'admin peut toujours utiliser delete direct --}}
+                        @include('profile.partials.delete-user-form')
+                    @endif
                 </div>
             </div>
         </div>

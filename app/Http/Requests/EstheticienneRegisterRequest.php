@@ -2,32 +2,24 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\EmailDisponiblePourInscription;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
 class EstheticienneRegisterRequest extends FormRequest
 {
-    /**
-     * Détermine si l'utilisateur est autorisé à faire cette requête.
-     * Tout le monde peut s'inscrire.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Les règles de validation.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
             'nom' => ['required', 'string', 'max:100'],
             'prenom' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'string', 'email', 'max:255', new EmailDisponiblePourInscription()],
             'telephone' => ['required', 'string', 'max:20'],
             'experience' => ['required', 'integer', 'min:0', 'max:60'],
             'specialites' => ['required', 'string', 'min:10', 'max:1000'],
@@ -35,9 +27,6 @@ class EstheticienneRegisterRequest extends FormRequest
         ];
     }
 
-    /**
-     * Messages d'erreur personnalisés en français.
-     */
     public function messages(): array
     {
         return [
@@ -45,7 +34,6 @@ class EstheticienneRegisterRequest extends FormRequest
             'prenom.required' => 'Le prénom est obligatoire.',
             'email.required' => 'L\'email est obligatoire.',
             'email.email' => 'L\'email doit être une adresse valide.',
-            'email.unique' => 'Cette adresse email est déjà utilisée.',
             'telephone.required' => 'Le numéro de téléphone est obligatoire.',
             'experience.required' => 'Veuillez indiquer votre nombre d\'années d\'expérience.',
             'experience.integer' => 'L\'expérience doit être un nombre entier.',
