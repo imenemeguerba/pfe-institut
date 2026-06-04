@@ -9,197 +9,197 @@
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://mysql.com)
-[![License](https://img.shields.io/badge/Licence-Académique-b480ff?style=flat-square)](#-licence)
+[![License](https://img.shields.io/badge/License-Academic-b480ff?style=flat-square)](#-license)
 
-> **Projet de Fin d'Études — 2025/2026**
+> **Final Year Project — 2025/2026**
 > École Supérieure de Technologie (HST)
 
 </div>
 
 ---
 
-## 📌 À propos
+## 📌 About
 
-**Glow Institute** est une application web complète dédiée à la gestion d'un institut de beauté. Elle centralise la réservation de rendez-vous en ligne, la gestion du personnel, la vente de produits cosmétiques et le pilotage de l'activité via un tableau de bord administrateur.
+**Glow Institute** is a full-stack web application for managing a beauty institute. It brings together online appointment booking, staff and schedule management, a cosmetics shop, and a complete administrative dashboard — all in one platform.
 
 | | |
 |---|---|
-| **École** | École Supérieure de Technologie (HST) |
-| **Domaine** | Mathématiques & Informatique |
-| **Filière** | Informatique |
-| **Spécialité** | Systèmes Informatiques |
-| **Année universitaire** | 2025 / 2026 |
-| **Encadrante** | Mme. |
-| **Étudiante** | Meguerba Imene |
+| **Institution** | École Supérieure de Technologie (HST) |
+| **Department** | Mathematics & Computer Science |
+| **Field** | Computer Science |
+| **Specialty** | Information Systems |
+| **Academic Year** | 2025 / 2026 |
+| **Supervisor** | Mme. |
+| **Student** | Meguerba Imene |
 
 ---
 
-## ✨ Fonctionnalités
+## ✨ Features
 
-### 👑 Administrateur
-- Tableau de bord avec KPIs, statistiques et rapports PDF
-- Gestion du catalogue — catégories, services, produits & stock
-- Validation des inscriptions des esthéticiennes
-- Gestion des clients (blocage, suppression, historique)
-- Gestion des commandes avec confirmation, annulation et facturation automatique
-- Modération des avis avant publication
-- Création et gestion de codes promotionnels
-- Paramétrage de l'institut (horaires, GPS, réseaux sociaux, TVA)
-- Calendrier global des disponibilités
-- Gestion des demandes de suppression de compte
+### 👑 Administrator
+- Dashboard with KPIs, activity statistics and PDF reports
+- Full catalogue management — categories, services, products & stock
+- Expert application review and account validation
+- Client account management (blocking, deletion, history)
+- Order management — confirmation, cancellation and automatic invoicing
+- Review moderation before publication
+- Promo code creation and management
+- Institute settings — opening hours, GPS location, social media, VAT rate
+- Global availability calendar
+- Account deletion request management
 
-### 💅 Esthéticienne
-- Inscription en ligne avec validation administrateur
-- Gestion du planning hebdomadaire et des indisponibilités
-- Traitement des rendez-vous (accepter, refuser, reporter, marquer comme réalisé)
-- Consultation des performances et des avis clients
-- Galerie avant/après
+### 💅 Beauty Expert
+- Online registration with administrator approval
+- Weekly schedule and unavailability management
+- Appointment handling — accept, refuse or mark as completed
+- Performance dashboard and client review consultation
+- Before/after gallery management
 
-### 🛍️ Cliente
-- Inscription sécurisée avec vérification OTP par email (réservée aux majeures)
-- Consultation et filtrage des services (catégorie, prix, durée)
-- Réservation de rendez-vous avec choix de l'esthéticienne ou attribution automatique
-- Boutique de produits avec panier, favoris et codes promo
-- Système d'avis et de notation
-- Programme de fidélité (points Bronze / Silver / Gold)
-- Questionnaire de type de peau avec recommandations personnalisées
-- Consultation du niveau d'affluence en temps réel
-- Téléchargement des factures en PDF
+### 🛍️ Client
+- Secure registration with email OTP verification (adults only)
+- Service browsing and filtering by category, price or duration
+- Appointment booking with expert selection or automatic assignment
+- Product shop with cart, wishlist and promo codes
+- Review and rating system
+- Loyalty programme — Bronze / Silver / Gold tiers
+- Skin type questionnaire with personalised product recommendations
+- Real-time institute occupancy indicator
+- Invoice download in PDF format
 
-### ⚙️ Automatisations système
-- Rappel automatique par email 24h avant chaque rendez-vous
-- Vérification des conflits de créneaux lors de la réservation
-- Génération automatique des factures (RDV + commandes)
-- Mise à jour du stock après confirmation de commande
-- Notifications in-app et email pour tous les acteurs
-- Calcul automatique du niveau d'affluence
+### ⚙️ Automated System Features
+- Automatic email reminder 24 hours before each appointment
+- Time slot conflict detection during booking
+- Automatic invoice generation for appointments and orders
+- Stock update after order confirmation
+- Real-time in-app and email notifications for all users
+- Automatic occupancy level calculation
 
 ---
 
-## 🛠️ Stack technique
+## 🛠️ Tech Stack
 
-| Couche | Technologie |
+| Layer | Technology |
 |---|---|
 | **Backend** | Laravel 12 · PHP 8.2+ |
-| **Base de données** | MySQL 8 |
-| **Authentification** | Laravel Breeze + OTP email |
-| **Frontend** | Blade · CSS3 personnalisé · Font Awesome 6 |
-| **PDF** | DomPDF (Laravel Snappy) |
-| **Emails** | SMTP Gmail · Mailable Laravel |
-| **Versioning** | Git · GitHub |
-| **Environnement** | XAMPP · PHP Artisan |
+| **Database** | MySQL 8 |
+| **Authentication** | Laravel Breeze + Email OTP |
+| **Frontend** | Blade · Custom CSS3 · Font Awesome 6 |
+| **PDF Generation** | DomPDF |
+| **Emails** | Gmail SMTP · Laravel Mailables |
+| **Version Control** | Git · GitHub |
+| **Local Environment** | XAMPP · PHP Artisan |
 
 ---
 
-## 🗄️ Base de données
+## 🗄️ Database
 
-Le projet repose sur **30+ tables** organisées en modules fonctionnels :
+The project uses a relational MySQL database with **27 business tables**:
 
 | Module | Tables |
 |---|---|
-| Authentification | `users`, `registration_otps` |
+| Authentication | `users`, `registration_otps` |
 | Catalogue | `categories`, `services`, `produits`, `categories_produits` |
-| Variantes | `service_variantes`, `produit_variantes` |
-| Planning | `disponibilites`, `indisponibilites` |
-| Réservations | `rendez_vous`, `rendez_vous_service` |
-| E-commerce | `paniers`, `panier_produit`, `favoris`, `commandes`, `commande_produit` |
+| Pivots & Variants | `service_estheticienne`, `rendez_vous_service`, `service_variantes`, `produit_variantes`, `panier_produit`, `commande_produit` |
+| Schedule | `disponibilites`, `indisponibilites` |
+| Appointments | `rendez_vous` |
+| E-commerce | `paniers`, `favoris`, `commandes` |
 | Promotions | `codes_promo` |
-| Avis & Contact | `avis`, `messages_contact` |
-| Facturation | `factures` |
-| Fidélité | `fidelite_points` |
-| Galerie | `avant_apres` |
-| Système | `notifications`, `instituts`, `demandes_suppression` |
+| Reviews & Contact | `avis`, `messages_contact` |
+| Billing | `factures` |
+| Loyalty | `fidelite_points` |
+| Gallery | `avant_apres` |
+| System | `notifications`, `instituts`, `demandes_suppression` |
 
 ---
 
 ## 🚀 Installation
 
-### Prérequis
+### Prerequisites
 
 - PHP 8.2+
 - Composer
 - Node.js 18+ & npm
-- MySQL (via XAMPP ou autre)
+- MySQL (via XAMPP or equivalent)
 - Git
 
-### Étapes
+### Setup
 
 ```bash
-# 1. Cloner le dépôt
+# 1. Clone the repository
 git clone https://github.com/imenemeguerba/pfe-institut.git
 cd pfe-institut
 
-# 2. Dépendances PHP
+# 2. Install PHP dependencies
 composer install
 
-# 3. Dépendances JavaScript
+# 3. Install JavaScript dependencies
 npm install
 
-# 4. Variables d'environnement
+# 4. Environment file
 cp .env.example .env
 
-# 5. Clé d'application
+# 5. Generate application key
 php artisan key:generate
 
-# 6. Base de données — configurer .env
+# 6. Configure the database in .env
 # DB_DATABASE=pfe_institut
 # DB_USERNAME=root
 # DB_PASSWORD=
 # DB_PORT=3307
 
-# 7. Migrations
+# 7. Run migrations
 php artisan migrate
 
-# 8. Données initiales (admin + données de démo)
+# 8. Seed initial data (admin account + demo data)
 php artisan db:seed
 
-# 9. Lien de stockage
+# 9. Create storage symlink
 php artisan storage:link
 
-# 10. Assets
+# 10. Build assets
 npm run build
 
-# 11. Lancer le serveur
+# 11. Start the development server
 php artisan serve
 ```
 
-L'application sera accessible sur **http://127.0.0.1:8000**
+The application will be available at **http://127.0.0.1:8000**
 
-### Comptes de démonstration
+### Demo Accounts
 
-| Rôle | Email | Mot de passe |
+| Role | Email | Password |
 |---|---|---|
-| Administrateur | admin@glowinstitute.com | password |
-| Esthéticienne | esthe@glowinstitute.com | password |
-| Cliente | client@glowinstitute.com | password |
+| Administrator | admin@glowinstitute.com | password |
+| Beauty Expert | esthe@glowinstitute.com | password |
+| Client | client@glowinstitute.com | password |
 
 ---
 
-## 📁 Structure du projet
+## 📁 Project Structure
 
 ```
 glow-institute/
 ├── app/
 │   ├── Http/Controllers/
-│   │   ├── Admin/          # 15 controllers admin
-│   │   ├── Client/         # 14 controllers client
-│   │   ├── Estheticienne/  # 8 controllers esthéticienne
-│   │   └── Auth/           # Authentification + OTP
-│   ├── Mail/               # 10 templates email
-│   ├── Models/             # 20+ modèles Eloquent
-│   └── Services/           # FactureService · FideliteService · RendezVousService
+│   │   ├── Admin/           # Administration controllers
+│   │   ├── Client/          # Client-side controllers
+│   │   ├── Estheticienne/   # Expert-side controllers
+│   │   └── Auth/            # Authentication & OTP
+│   ├── Mail/                # Transactional email classes
+│   ├── Models/              # Eloquent models
+│   └── Services/            # FactureService · FideliteService · RendezVousService
 ├── database/
-│   ├── migrations/         # 30+ migrations
+│   ├── migrations/          # 27+ migration files
 │   └── seeders/
 ├── resources/
 │   └── views/
-│       ├── admin/          # Toutes les vues admin
-│       ├── client/         # Toutes les vues client
-│       ├── estheticienne/  # Toutes les vues esthéticienne
-│       ├── emails/         # Templates emails transactionnels
-│       └── layouts/        # Layout principal + composants
+│       ├── admin/           # Admin panel views
+│       ├── client/          # Client interface views
+│       ├── estheticienne/   # Expert interface views
+│       ├── emails/          # Email templates
+│       └── layouts/         # Main layout & components
 └── public/
-    ├── css/                # Feuilles de style personnalisées
+    ├── css/                 # Custom stylesheets
     └── images/
 ```
 
@@ -207,28 +207,28 @@ glow-institute/
 
 ## 📄 Documentation
 
-Ce projet est accompagné d'un mémoire de fin d'études détaillant :
+This project is accompanied by a final year dissertation covering:
 
-- Étude de l'existant et analyse des besoins
-- Conception (diagrammes UML : cas d'utilisation, séquences, classes)
-- Implémentation et choix techniques
-- Tests et validation
+- Existing system analysis and requirements study
+- System design (UML diagrams: use cases, sequence, class diagrams)
+- Technical implementation
+- Testing and validation
 
 ---
 
-## 👩‍💻 Auteure
+## 👩‍💻 Author
 
 <div align="center">
 
 **Meguerba Imene**
-Étudiante en Systèmes Informatiques
-École Supérieure de Technologie (HST) — 2025/2026
+Information Systems — École Supérieure de Technologie (HST)
+2025 / 2026
 
 </div>
 
 ---
 
-## 📜 Licence
+## 📜 License
 
-Projet académique réalisé dans le cadre du Projet de Fin d'Études.
-Tous droits réservés © 2026 — Meguerba Imene
+Academic project developed as part of a Final Year Dissertation.
+All rights reserved © 2026 — Meguerba Imene
