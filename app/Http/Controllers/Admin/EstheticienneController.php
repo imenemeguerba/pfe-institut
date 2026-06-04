@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CompteActionEsthe;
+use App\Mail\InscriptionEstheAcceptee;
+use App\Mail\InscriptionEstheRefusee;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class EstheticienneController extends Controller
@@ -14,8 +18,8 @@ class EstheticienneController extends Controller
     public function index(Request $request): View
     {
         $filtre = $request->query('filtre', 'en_attente');
+        $search = $request->query('search', '');
 
-        // Exclure les comptes supprimés de la vue principale
         $query = User::estheticiennes()->nonSupprimes()->orderByDesc('created_at');
 
         if ($filtre === 'en_attente') {
@@ -26,23 +30,30 @@ class EstheticienneController extends Controller
             $query->where('statut_compte', 'desactive');
         }
 
-        $estheticiennes = $query->paginate(15);
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nom', 'like', '%' . $search . '%')
+                  ->orWhere('prenom', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('telephone', 'like', '%' . $search . '%');
+            });
+        }
+
+        $estheticiennes = $query->paginate(15)->withQueryString();
 
         $compteurs = [
             'en_attente' => User::estheticiennes()->enAttenteValidation()->count(),
-            'actives' => User::estheticiennes()->actifs()->count(),
+            'actives'    => User::estheticiennes()->actifs()->count(),
             'desactives' => User::estheticiennes()->where('statut_compte', 'desactive')->count(),
-            'toutes' => User::estheticiennes()->nonSupprimes()->count(),
+            'toutes'     => User::estheticiennes()->nonSupprimes()->count(),
         ];
 
-        return view('admin.estheticiennes.index', compact('estheticiennes', 'filtre', 'compteurs'));
+        return view('admin.estheticiennes.index', compact('estheticiennes', 'filtre', 'search', 'compteurs'));
     }
 
     public function show(User $estheticienne): View
     {
-        if (!$estheticienne->isEstheticienne()) {
-            abort(404);
-        }
+        if (!$estheticienne->isEstheticienne()) abort(404);
 
         $estheticienne->load('servicesProposes');
         $services = Service::actifs()->with('category')->get();
@@ -57,19 +68,24 @@ class EstheticienneController extends Controller
         }
 
         $estheticienne->update([
-            'statut_compte' => 'actif',
-            'motif_statut' => null,
+            'statut_compte'     => 'actif',
+            'motif_statut'      => null,
             'email_verified_at' => now(),
         ]);
 
-        return redirect()
-            ->route('admin.estheticiennes.show', $estheticienne)
-            ->with('success', 'Demande acceptée avec succès. ' . $estheticienne->fullName() . ' peut maintenant se connecter.');
+        // ── Email acceptation ───────────────────────────────────────────
+        try {
+            Mail::to($estheticienne->email)->send(new InscriptionEstheAcceptee(
+                prenom: $estheticienne->prenom,
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Email accepter esthe: ' . $e->getMessage());
+        }
+
+        return redirect()->route('admin.estheticiennes.show', $estheticienne)
+            ->with('success', 'Demande acceptée. ' . $estheticienne->fullName() . ' peut maintenant se connecter.');
     }
 
-    /**
-     * Refuse une demande d'inscription : bannit l'email à vie.
-     */
     public function refuser(Request $request, User $estheticienne): RedirectResponse
     {
         if (!$estheticienne->isEstheticienne() || !$estheticienne->estEnAttenteValidation()) {
@@ -80,18 +96,29 @@ class EstheticienneController extends Controller
             'motif_refus' => ['nullable', 'string', 'max:500'],
         ]);
 
-        $nom = $estheticienne->fullName();
+        $nom    = $estheticienne->fullName();
+        $email  = $estheticienne->email;
+        $prenom = $estheticienne->prenom;
+        $motif  = $request->motif_refus ?? null;
 
-        // ⭐ Bannir l'email à vie (pas de date_libre_le → restera bloqué)
+        // ── Email refus avant suppression ───────────────────────────────
+        try {
+            Mail::to($email)->send(new InscriptionEstheRefusee(
+                prenom: $prenom,
+                motif:  $motif,
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Email refuser esthe: ' . $e->getMessage());
+        }
+
         $estheticienne->update([
-            'statut_compte' => 'supprime',
-            'motif_statut' => 'Demande d\'inscription refusée par l\'admin',
-            'email_libre_le' => '9999-12-31 23:59:59', // Banni à vie
+            'statut_compte'  => 'supprime',
+            'motif_statut'   => 'Demande d\'inscription refusée par l\'admin',
+            'email_libre_le' => '9999-12-31 23:59:59',
         ]);
 
-        return redirect()
-            ->route('admin.estheticiennes.index')
-            ->with('success', 'La demande de ' . $nom . ' a été refusée. Cet email ne pourra plus être réutilisé.');
+        return redirect()->route('admin.estheticiennes.index')
+            ->with('success', 'La demande de ' . $nom . ' a été refusée.');
     }
 
     public function desactiver(Request $request, User $estheticienne): RedirectResponse
@@ -106,11 +133,21 @@ class EstheticienneController extends Controller
 
         $estheticienne->update([
             'statut_compte' => 'desactive',
-            'motif_statut' => $request->input('motif'),
+            'motif_statut'  => $request->input('motif'),
         ]);
 
-        return redirect()
-            ->route('admin.estheticiennes.show', $estheticienne)
+        // ── Email désactivation ─────────────────────────────────────────
+        try {
+            Mail::to($estheticienne->email)->send(new CompteActionEsthe(
+                prenom: $estheticienne->prenom,
+                action: 'desactive',
+                motif:  $request->motif ?? null,
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Email désactiver esthe: ' . $e->getMessage());
+        }
+
+        return redirect()->route('admin.estheticiennes.show', $estheticienne)
             ->with('success', 'Esthéticienne désactivée avec succès.');
     }
 
@@ -122,40 +159,41 @@ class EstheticienneController extends Controller
 
         $estheticienne->update([
             'statut_compte' => 'actif',
-            'motif_statut' => null,
+            'motif_statut'  => null,
         ]);
 
-        return redirect()
-            ->route('admin.estheticiennes.show', $estheticienne)
+        // ── Email réactivation ──────────────────────────────────────────
+        try {
+            Mail::to($estheticienne->email)->send(new CompteActionEsthe(
+                prenom: $estheticienne->prenom,
+                action: 'reactive',
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Email réactiver esthe: ' . $e->getMessage());
+        }
+
+        return redirect()->route('admin.estheticiennes.show', $estheticienne)
             ->with('success', 'Esthéticienne réactivée avec succès.');
     }
 
     public function updateServices(Request $request, User $estheticienne): RedirectResponse
     {
-        if (!$estheticienne->isEstheticienne()) {
-            abort(404);
-        }
+        if (!$estheticienne->isEstheticienne()) abort(404);
 
         $request->validate([
-            'services' => ['nullable', 'array'],
+            'services'   => ['nullable', 'array'],
             'services.*' => ['exists:services,id'],
         ]);
 
         $estheticienne->servicesProposes()->sync($request->input('services', []));
 
-        return redirect()
-            ->route('admin.estheticiennes.show', $estheticienne)
+        return redirect()->route('admin.estheticiennes.show', $estheticienne)
             ->with('success', 'Services associés mis à jour avec succès.');
     }
 
-    /**
-     * Suppression définitive par l'admin : bannit l'email à vie.
-     */
     public function destroy(User $estheticienne): RedirectResponse
     {
-        if (!$estheticienne->isEstheticienne()) {
-            abort(404);
-        }
+        if (!$estheticienne->isEstheticienne()) abort(404);
 
         $rdvFuturs = $estheticienne->rendezVousAssignes()
             ->where('date_debut', '>=', now())
@@ -164,22 +202,31 @@ class EstheticienneController extends Controller
 
         if ($rdvFuturs > 0) {
             return back()->with('error',
-                'Impossible de supprimer ce compte : ' . $estheticienne->fullName() .
-                ' a ' . $rdvFuturs . ' rendez-vous à venir. Désactivez le compte ou attendez la fin des rendez-vous.'
+                'Impossible : ' . $estheticienne->fullName() . ' a ' . $rdvFuturs . ' rendez-vous à venir.'
             );
         }
 
-        $nom = $estheticienne->fullName();
+        $nom    = $estheticienne->fullName();
+        $email  = $estheticienne->email;
+        $prenom = $estheticienne->prenom;
 
-        // ⭐ Bannir l'email à vie (admin = pas de seconde chance)
+        // ── Email suppression avant mise à jour ─────────────────────────
+        try {
+            Mail::to($email)->send(new CompteActionEsthe(
+                prenom: $prenom,
+                action: 'supprime',
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Email supprimer esthe: ' . $e->getMessage());
+        }
+
         $estheticienne->update([
-            'statut_compte' => 'supprime',
-            'motif_statut' => 'Compte supprimé par l\'administrateur',
-            'email_libre_le' => '9999-12-31 23:59:59', // Banni à vie
+            'statut_compte'  => 'supprime',
+            'motif_statut'   => 'Compte supprimé par l\'administrateur',
+            'email_libre_le' => '9999-12-31 23:59:59',
         ]);
 
-        return redirect()
-            ->route('admin.estheticiennes.index')
-            ->with('success', 'Le compte de ' . $nom . ' a été supprimé. Cet email ne pourra plus être réutilisé.');
+        return redirect()->route('admin.estheticiennes.index')
+            ->with('success', 'Le compte de ' . $nom . ' a été supprimé.');
     }
 }

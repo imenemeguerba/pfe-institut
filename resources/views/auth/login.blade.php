@@ -1,62 +1,132 @@
-<x-guest-layout>
-    {{-- Message de succès (ex: après inscription esthéticienne) --}}
-    @if (session('success'))
-        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Sign In — {{ config('app.name') }}</title>
+</head>
+<body>
+<div class="container" id="container">
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+    {{-- ── SIGN IN FORM ── --}}
+    <div class="form-box login">
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <h1>Sign In</h1>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
+            @if(session('success'))
+                <p class="msg-success">{{ session('success') }}</p>
+            @endif
+            @if($errors->any())
+                <p class="msg-error">{{ $errors->first() }}</p>
             @endif
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-    {{-- Lien inscription esthéticienne --}}
-    <div class="mt-6 pt-6 border-t border-gray-200 text-center">
-        <p class="text-sm text-gray-600">
-            Vous êtes esthéticienne ?
-            <a href="{{ route('register.esthe') }}" class="text-indigo-600 hover:text-indigo-800 underline">
-                Inscrivez-vous ici
-            </a>
-        </p>
+            <div class="input-box">
+                <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password" required>
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="forgot-link">
+                <a href="{{ route('password.otp.email') }}">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn">Sign In</button>
+            <a href="{{ route('landingpage') }}" class="back-home">← Back to Home</a>
+            <p class="join-esthe">Are you a beauty expert? <a href="{{ route('register.estheticienne') }}">Join as Esthetician</a></p>
+        </form>
     </div>
-</x-guest-layout>
+
+    {{-- ── SIGN UP FORM ── --}}
+    <div class="form-box register">
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
+            <h1>Sign Up</h1>
+
+            @if($errors->any())
+                <p class="msg-error">{{ $errors->first() }}</p>
+            @endif
+
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="text" name="nom" placeholder="Last Name" value="{{ old('nom') }}" required>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" name="prenom" placeholder="First Name" value="{{ old('prenom') }}" required>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+
+            <div class="input-box">
+                <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="text" name="telephone" placeholder="Phone" value="{{ old('telephone') }}" required>
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <div class="input-box">
+                    <input type="date" name="date_naissance" value="{{ old('date_naissance') }}" required>
+                    <i class="fa-solid fa-calendar"></i>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="password" name="password" placeholder="Password" required>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+            </div>
+
+            <div class="law-check">
+                <input type="checkbox" id="loi1807r" name="loi1807" required>
+                <label for="loi1807r">
+                    I agree that my personal data will be processed in accordance with
+                    <a href="#">Law n°18-07 of June 10, 2018</a>
+                    relating to the protection of individuals with regard to the processing of personal data.
+                </label>
+            </div>
+
+            <button type="submit" class="btn">Sign Up</button>
+            <a href="{{ route('landingpage') }}" class="back-home">← Back to Home</a>
+        </form>
+    </div>
+
+    {{-- ── TOGGLE BOX ── --}}
+    <div class="toggle-box">
+        <div class="toggle-panel toggle-left">
+            <h1>Hello, Welcome!</h1>
+            <p>Don't have an account yet?</p>
+            <button class="btn register-btn">Sign Up</button>
+        </div>
+        <div class="toggle-panel toggle-right">
+            <h1>Welcome Back!</h1>
+            <p>Already have an account?</p>
+            <button class="btn login-btn">Sign In</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const container   = document.querySelector('.container');
+const registerBtn = document.querySelector('.register-btn');
+const loginBtn    = document.querySelector('.login-btn');
+registerBtn.addEventListener('click', () => container.classList.add('active'));
+loginBtn.addEventListener('click',    () => container.classList.remove('active'));
+</script>
+</body>
+</html>

@@ -1,73 +1,125 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Sign Up — {{ config('app.name') }}</title>
+</head>
+<body>
+<div class="container active" id="container">
 
-        <!-- Nom -->
-        <div>
-            <x-input-label for="nom" :value="__('Nom')" />
-            <x-text-input id="nom" class="block mt-1 w-full" type="text" name="nom" :value="old('nom')" required autofocus autocomplete="family-name" />
-            <x-input-error :messages="$errors->get('nom')" class="mt-2" />
+    {{-- ── SIGN IN FORM ── --}}
+    <div class="form-box login">
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <h1>Sign In</h1>
+
+            <div class="input-box">
+                <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password" required>
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="forgot-link">
+                <a href="{{ route('password.otp.email') }}">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn">Sign In</button>
+            <a href="{{ route('landingpage') }}" class="back-home">← Back to Home</a>
+            <p class="join-esthe">Are you a beauty expert? <a href="{{ route('register.estheticienne') }}">Join as Esthetician</a></p>
+        </form>
+    </div>
+
+    {{-- ── SIGN UP FORM ── --}}
+    <div class="form-box register">
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
+            <h1>Sign Up</h1>
+
+            @if($errors->any())
+                <p class="msg-error">{{ $errors->first() }}</p>
+            @endif
+
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="text" name="nom" placeholder="Last Name" value="{{ old('nom') }}" required>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" name="prenom" placeholder="First Name" value="{{ old('prenom') }}" required>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+
+            <div class="input-box">
+                <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="text" name="telephone" placeholder="Phone" value="{{ old('telephone') }}" required>
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <div class="input-box">
+                    <input type="date" name="date_naissance" value="{{ old('date_naissance') }}" required>
+                    <i class="fa-solid fa-calendar"></i>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="password" name="password" placeholder="Password" required>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="password_confirmation" placeholder="Confirm" required>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+            </div>
+
+            <div class="law-check">
+                <input type="checkbox" id="loi1807r" name="loi1807" required>
+                <label for="loi1807r">
+                    I agree that my personal data will be processed in accordance with
+                    <a href="#">Law n°18-07 of June 10, 2018</a>
+                    relating to the protection of individuals with regard to the processing of personal data.
+                </label>
+            </div>
+
+            <button type="submit" class="btn">Sign Up</button>
+            <a href="{{ route('landingpage') }}" class="back-home">← Back to Home</a>
+        </form>
+    </div>
+
+    {{-- ── TOGGLE BOX ── --}}
+    <div class="toggle-box">
+        <div class="toggle-panel toggle-left">
+            <h1>Hello, Welcome!</h1>
+            <p>Don't have an account yet?</p>
+            <button class="btn register-btn">Sign Up</button>
         </div>
-
-        <!-- Prénom -->
-        <div class="mt-4">
-            <x-input-label for="prenom" :value="__('Prénom')" />
-            <x-text-input id="prenom" class="block mt-1 w-full" type="text" name="prenom" :value="old('prenom')" required autocomplete="given-name" />
-            <x-input-error :messages="$errors->get('prenom')" class="mt-2" />
+        <div class="toggle-panel toggle-right">
+            <h1>Welcome Back!</h1>
+            <p>Already have an account?</p>
+            <button class="btn login-btn">Sign In</button>
         </div>
+    </div>
 
-        <!-- Date de naissance -->
-        <div class="mt-4">
-            <x-input-label for="date_naissance" :value="__('Date de naissance')" />
-            <x-text-input id="date_naissance" class="block mt-1 w-full" type="date" name="date_naissance" :value="old('date_naissance')" required />
-            <x-input-error :messages="$errors->get('date_naissance')" class="mt-2" />
-        </div>
+</div>
 
-        <!-- Téléphone -->
-        <div class="mt-4">
-            <x-input-label for="telephone" :value="__('Téléphone')" />
-            <x-text-input id="telephone" class="block mt-1 w-full" type="tel" name="telephone" :value="old('telephone')" required autocomplete="tel" />
-            <x-input-error :messages="$errors->get('telephone')" class="mt-2" />
-        </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Mot de passe')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirmer le mot de passe')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Déjà inscrit ?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('S\'inscrire') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+<script>
+const container   = document.querySelector('.container');
+const registerBtn = document.querySelector('.register-btn');
+const loginBtn    = document.querySelector('.login-btn');
+registerBtn.addEventListener('click', () => container.classList.add('active'));
+loginBtn.addEventListener('click',    () => container.classList.remove('active'));
+</script>
+</body>
+</html>

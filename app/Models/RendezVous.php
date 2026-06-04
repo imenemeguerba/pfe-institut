@@ -7,21 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RendezVous extends Model
 {
-    /** @use HasFactory<\Database\Factories\RendezVousFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    /**
-     * Nom explicite de la table (sinon Laravel cherche "rendez_vouses").
-     */
     protected $table = 'rendez_vous';
 
-    /**
-     * Les attributs autorisés à l'écriture massive.
-     */
     protected $fillable = [
+        'groupe_reservation',
         'client_id',
         'estheticienne_id',
         'date_debut',
@@ -33,131 +28,87 @@ class RendezVous extends Model
         'statut',
         'notes',
         'motif_refus',
+        'motif_report',
+        'rappel_envoye_at',
     ];
 
-    /**
-     * Conversion automatique des types.
-     */
     protected $casts = [
-        'date_debut' => 'datetime',
-        'date_fin' => 'datetime',
-        'duree_totale' => 'integer',
-        'prix_original' => 'integer',
-        'prix_final' => 'integer',
+        'date_debut'     => 'datetime',
+        'date_fin'       => 'datetime',
+        'duree_totale'   => 'integer',
+        'prix_original'  => 'integer',
+        'prix_final'     => 'integer',
+        'deleted_at'     => 'datetime',
     ];
 
-    /**
-     * Mapping statut → label français.
-     */
     public const STATUTS = [
         'en_attente' => 'En attente',
-        'confirme' => 'Confirmé',
-        'refuse' => 'Refusé',
-        'annule' => 'Annulé',
-        'termine' => 'Terminé',
+        'confirme'   => 'Confirmé',
+        'refuse'     => 'Refusé',
+        'annule'     => 'Annulé',
+        'termine'    => 'Terminé',
+        'reporte'    => 'Reporté',
     ];
 
-    // =========================================================================
-    // RELATIONS
-    // =========================================================================
-
-    /**
-     * Le client qui a réservé.
-     */
+    // ====================== RELATIONS ======================
     public function client(): BelongsTo
     {
         return $this->belongsTo(User::class, 'client_id');
     }
 
-    /**
-     * L'esthéticienne assignée.
-     */
     public function estheticienne(): BelongsTo
     {
         return $this->belongsTo(User::class, 'estheticienne_id');
     }
 
-    /**
-     * Le code promo utilisé (si applicable).
-     */
     public function codePromo(): BelongsTo
     {
-        return $this->belongsTo(CodePromo::class, 'code_promo_id');
+        return $this->belongsTo(CodePromo::class);
     }
 
-    /**
-     * Les services réservés dans ce RDV (N:N avec snapshot prix/durée).
-     */
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'rendez_vous_service')
-            ->withPivot('prix_au_moment', 'duree_au_moment')
-            ->withTimestamps();
+                    ->withPivot('prix_au_moment', 'duree_au_moment')
+                    ->withTimestamps();
     }
 
-    /**
-     * La facture associée (1:1, après réalisation).
-     */
     public function facture(): HasOne
     {
         return $this->hasOne(Facture::class);
     }
 
-    // =========================================================================
-    // SCOPES
-    // =========================================================================
-
-    /**
-     * Scope : RDV par statut.
-     */
+    // ====================== SCOPES ======================
     public function scopeStatut($query, string $statut)
     {
         return $query->where('statut', $statut);
     }
 
-    /**
-     * Scope : RDV à venir (date_debut dans le futur).
-     */
     public function scopeAvenir($query)
     {
         return $query->where('date_debut', '>=', now());
     }
 
-    /**
-     * Scope : RDV passés (date_debut dans le passé).
-     */
     public function scopePasses($query)
     {
         return $query->where('date_debut', '<', now());
     }
 
-    /**
-     * Scope : RDV confirmés.
-     */
     public function scopeConfirmes($query)
     {
         return $query->where('statut', 'confirme');
     }
 
-    /**
-     * Scope : RDV pour une esthéticienne.
-     */
     public function scopePourEsthe($query, $estheId)
     {
         return $query->where('estheticienne_id', $estheId);
     }
 
-    /**
-     * Scope : RDV pour un client.
-     */
     public function scopePourClient($query, $clientId)
     {
         return $query->where('client_id', $clientId);
     }
 
-    /**
-     * Scope : RDV qui chevauchent une période donnée.
-     */
     public function scopeChevauchent($query, $debut, $fin)
     {
         return $query->where(function ($q) use ($debut, $fin) {
@@ -170,38 +121,23 @@ class RendezVous extends Model
         });
     }
 
-    // =========================================================================
-    // MÉTHODES MÉTIER
-    // =========================================================================
-
-    /**
-     * Retourne le label du statut en français.
-     */
+    // ====================== MÉTHODES ======================
     public function libelleStatut(): string
     {
         return self::STATUTS[$this->statut] ?? 'Inconnu';
     }
 
-    /**
-     * Vérifie si le RDV peut encore être annulé par le client.
-     */
     public function peutEtreAnnule(): bool
     {
         return in_array($this->statut, ['en_attente', 'confirme'])
             && $this->date_debut->isFuture();
     }
 
-    /**
-     * Vérifie si le RDV est passé.
-     */
     public function estPasse(): bool
     {
         return $this->date_debut->isPast();
     }
 
-    /**
-     * Calcule la réduction appliquée (en DA).
-     */
     public function reductionAppliquee(): int
     {
         return $this->prix_original - $this->prix_final;

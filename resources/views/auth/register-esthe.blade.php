@@ -1,83 +1,240 @@
-<x-guest-layout>
-    {{-- Message de présentation --}}
-    <div class="mb-6 p-4 bg-pink-50 border-l-4 border-pink-400 rounded">
-        <p class="text-sm text-gray-700">
-            <strong>Espace professionnel</strong><br>
-            Votre demande sera examinée par notre administrateur. Vous recevrez une notification dès la validation de votre compte.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Join as Expert — {{ config('app.name') }}</title>
+    <style>
+        body { overflow: hidden; }
+
+        .esthe-container {
+            position: relative;
+            width: 880px;
+            height: 96vh;
+            background: #fff;
+            margin: 2vh auto;
+            border-radius: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ── LEFT PANEL ── */
+        .esthe-left {
+            width: 38%;
+            background: linear-gradient(135deg, #b480ff, #d3aa95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 36px 28px;
+            text-align: center;
+            color: white;
+            flex-shrink: 0;
+        }
+        .esthe-left .icon { font-size: 52px; margin-bottom: 16px; }
+        .esthe-left h2 {
+            font-size: 22px; font-weight: 700; margin-bottom: 10px;
+            background: none; -webkit-text-fill-color: white;
+        }
+        .esthe-left p {
+            font-size: 12px; color: rgba(255,255,255,0.88);
+            line-height: 1.7; margin-bottom: 20px;
+        }
+        .esthe-left .left-link {
+            display: inline-block; padding: 8px 20px;
+            border: 2px solid white; border-radius: 25px;
+            color: white; font-size: 12px; font-weight: 600;
+            text-decoration: none; transition: 0.3s; margin: 4px 0;
+        }
+        .esthe-left .left-link:hover { background: white; color: #b480ff; }
+
+        /* ── RIGHT PANEL ── */
+        .esthe-right {
+            width: 62%;
+            padding: 28px 36px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .esthe-right::-webkit-scrollbar { width: 3px; }
+        .esthe-right::-webkit-scrollbar-thumb {
+            background: linear-gradient(#b480ff, #d3aa95);
+            border-radius: 4px;
+        }
+        .esthe-right h1 {
+            font-size: 28px; text-align: center; margin-bottom: 4px;
+            background: linear-gradient(270deg, #b480ff, #d3aa95, #b480ff);
+            background-size: 600% 600%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradientText 4s ease infinite;
+        }
+        .esthe-right .subtitle {
+            font-size: 12px; color: #aaa; text-align: center; margin-bottom: 18px;
+        }
+        .esthe-right .input-box {
+            position: relative; margin: 10px 0;
+        }
+        .esthe-right .input-box input,
+        .esthe-right .input-box textarea {
+            width: 100%; padding: 10px 42px 10px 16px;
+            background: #f0f0f0; border-radius: 8px; border: none; outline: none;
+            font-size: 13px; color: #333; font-weight: 500;
+            font-family: "Poppins", sans-serif;
+        }
+        .esthe-right .input-box textarea {
+            padding: 10px 16px; height: 60px; resize: none;
+        }
+        .esthe-right .input-box input::placeholder,
+        .esthe-right .input-box textarea::placeholder { color: #aaa; font-weight: 400; }
+        .esthe-right .input-box i {
+            position: absolute; right: 14px; top: 50%;
+            transform: translateY(-50%); font-size: 16px; color: #333;
+        }
+
+        /* 2 colonnes pour nom/prénom et password */
+        .input-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        }
+
+        /* ── CHECKBOX LOI ── */
+        .law-check {
+            display: flex; align-items: flex-start; gap: 10px;
+            background: #f8f4ff; border-radius: 10px; padding: 12px 14px;
+            margin: 12px 0;
+            border: 1px solid rgba(180,128,255,0.2);
+        }
+        .law-check input[type="checkbox"] {
+            width: 16px; height: 16px; margin-top: 2px;
+            accent-color: #b480ff; flex-shrink: 0; cursor: pointer;
+        }
+        .law-check label {
+            font-size: 11px; color: #666; line-height: 1.6; cursor: pointer;
+        }
+        .law-check label a { color: #b480ff; text-decoration: none; font-weight: 600; }
+        .law-check label a:hover { color: #d3aa95; }
+
+        /* ── SUBMIT BTN ── */
+        .esthe-right .btn {
+            width: 100%; height: 44px;
+            background: linear-gradient(90deg, #b480ff, #d3aa95);
+            border-radius: 8px; border: none; cursor: pointer;
+            font-size: 14px; color: #fff; font-weight: 600;
+            transition: 0.3s; font-family: "Poppins", sans-serif;
+        }
+        .esthe-right .btn:hover {
+            opacity: 0.9; transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(180,128,255,0.4);
+        }
+
+        /* ── ERROR ── */
+        .error-box {
+            background: #fff5f5; border: 1px solid #fc8181;
+            padding: 8px 12px; border-radius: 8px;
+            font-size: 12px; color: #e53e3e; margin-bottom: 10px;
+        }
+
+        @keyframes gradientText {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .esthe-left .icon i { font-size: 52px; color: rgba(255,255,255,0.9); }
+    </style>
+</head>
+<body>
+
+<div class="esthe-container">
+
+    {{-- ── LEFT ── --}}
+    <div class="esthe-left">
+        <div class="icon"><i class="fa-solid fa-spa"></i></div>
+        <h2>Join Our Expert Team</h2>
+        <p>
+            Submit your application and you'll receive an email once your account is validated by our team.
         </p>
+        <a href="{{ route('login') }}" class="left-link">Already have an account?</a>
+        <a href="{{ route('landingpage') }}" class="left-link">← Back to Home</a>
     </div>
 
-    <form method="POST" action="{{ route('register.esthe') }}">
-        @csrf
+    {{-- ── RIGHT ── --}}
+    <div class="esthe-right">
+        <h1>Expert Registration</h1>
+        <p class="subtitle">Fill in your professional information below</p>
 
-        {{-- Nom --}}
-        <div>
-            <x-input-label for="nom" :value="__('Nom')" />
-            <x-text-input id="nom" class="block mt-1 w-full" type="text" name="nom" :value="old('nom')" required autofocus autocomplete="family-name" />
-            <x-input-error :messages="$errors->get('nom')" class="mt-2" />
-        </div>
+        @if($errors->any())
+            <div class="error-box">{{ $errors->first() }}</div>
+        @endif
 
-        {{-- Prénom --}}
-        <div class="mt-4">
-            <x-input-label for="prenom" :value="__('Prénom')" />
-            <x-text-input id="prenom" class="block mt-1 w-full" type="text" name="prenom" :value="old('prenom')" required autocomplete="given-name" />
-            <x-input-error :messages="$errors->get('prenom')" class="mt-2" />
-        </div>
+        <form method="POST" action="{{ route('register.estheticienne') }}">
+            @csrf
 
-        {{-- Email --}}
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Adresse email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="email" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+            {{-- Nom + Prénom --}}
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="text" name="nom" placeholder="Last Name" value="{{ old('nom') }}" required>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" name="prenom" placeholder="First Name" value="{{ old('prenom') }}" required>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
 
-        {{-- Téléphone --}}
-        <div class="mt-4">
-            <x-input-label for="telephone" :value="__('Numéro de téléphone')" />
-            <x-text-input id="telephone" class="block mt-1 w-full" type="tel" name="telephone" :value="old('telephone')" required autocomplete="tel" />
-            <x-input-error :messages="$errors->get('telephone')" class="mt-2" />
-        </div>
+            {{-- Email --}}
+            <div class="input-box">
+                <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
 
-        {{-- Expérience --}}
-        <div class="mt-4">
-            <x-input-label for="experience" :value="__('Années d\'expérience')" />
-            <x-text-input id="experience" class="block mt-1 w-full" type="number" name="experience" :value="old('experience')" required min="0" max="60" />
-            <x-input-error :messages="$errors->get('experience')" class="mt-2" />
-        </div>
+            {{-- Téléphone + Expérience --}}
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="tel" name="telephone" placeholder="Phone" value="{{ old('telephone') }}" required>
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <div class="input-box">
+                    <input type="number" name="experience" placeholder="Years of experience" value="{{ old('experience') }}" min="0" max="60" required>
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+            </div>
 
-        {{-- Spécialités --}}
-        <div class="mt-4">
-            <x-input-label for="specialites" :value="__('Vos spécialités')" />
-            <textarea id="specialites" name="specialites" rows="4" required minlength="10" maxlength="1000"
-                      class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                      placeholder="Ex : Soins du visage, manucure, maquillage, massages...">{{ old('specialites') }}</textarea>
-            <p class="mt-1 text-xs text-gray-500">Décrivez vos compétences (10 caractères minimum, 1000 maximum).</p>
-            <x-input-error :messages="$errors->get('specialites')" class="mt-2" />
-        </div>
+            {{-- Spécialités --}}
+            <div class="input-box">
+                <textarea name="specialites" placeholder="Your specialties (e.g. facial care, makeup, massage...)" required minlength="10" maxlength="1000">{{ old('specialites') }}</textarea>
+            </div>
 
-        {{-- Mot de passe --}}
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Mot de passe')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            {{-- Password + Confirm --}}
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="password" name="password" placeholder="Password" required>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+            </div>
 
-        {{-- Confirmation mot de passe --}}
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirmer le mot de passe')" />
-            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+            {{-- Loi 18-07 --}}
+            <div class="law-check">
+                <input type="checkbox" id="loi1807" name="loi1807" required>
+                <label for="loi1807">
+                    I agree that my personal data will be processed in accordance with
+                    <a href="#" title="Loi n°18-07 du 10 juin 2018">Law n°18-07 of June 10, 2018</a>
+                    relating to the protection of individuals with regard to the processing of personal data.
+                </label>
+            </div>
 
-        {{-- Boutons --}}
-        <div class="flex items-center justify-end mt-6">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Déjà un compte ?') }}
-            </a>
+            <button type="submit" class="btn">Submit My Application</button>
+        </form>
+    </div>
 
-            <x-primary-button class="ms-4">
-                {{ __('Soumettre ma demande') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</div>
+
+</body>
+</html>

@@ -34,6 +34,8 @@ class Institut extends Model
         'taux_tva',
         'seuil_affluence_eleve',
         'seuil_affluence_moyen',
+        'latitude',
+        'longitude',
     ];
 
     /**

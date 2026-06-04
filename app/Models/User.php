@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'nom',
@@ -28,6 +29,7 @@ class User extends Authenticatable
         'bio',
         'photo',
         'password',
+        'type_peau',
     ];
 
     protected $hidden = [
@@ -44,6 +46,11 @@ class User extends Authenticatable
             'email_libre_le' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new \App\Models\Scopes\NotBannedScope());
     }
 
     // =========================================================================
@@ -244,4 +251,9 @@ class User extends Authenticatable
     {
         return $this->role === 'client';
     }
+
+    public function pointsFidelite(): \Illuminate\Database\Eloquent\Relations\HasMany
+   {
+    return $this->hasMany(\App\Models\FidelitePoint::class, 'client_id');
+   }
 }

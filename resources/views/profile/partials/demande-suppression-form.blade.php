@@ -1,71 +1,95 @@
-<section class="space-y-6">
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Supprimer mon compte') }}
-        </h2>
+@php $demandeEnCours = Auth::user()->demandeSuppressionEnCours(); @endphp
 
-        <p class="mt-1 text-sm text-gray-600">
-            La suppression de votre compte n'est pas immédiate. Votre demande sera examinée par notre administrateur, qui vérifiera notamment l'absence de rendez-vous à venir avant de l'approuver.
-        </p>
-    </header>
+@if($demandeEnCours)
+    <div style="background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.2);border-left:3px solid #f97316;border-radius:12px;padding:16px 20px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+            <div>
+                <p style="font-size:13px;font-weight:700;color:#f97316;margin-bottom:4px;">
+                    <i class="fa-solid fa-clock"></i> Deletion request pending
+                </p>
+                <p style="font-size:11px;color:#9ca3af;margin-bottom:8px;">
+                    Submitted on {{ $demandeEnCours->created_at->format('d/m/Y \a\t H:i') }}
+                </p>
+                @if($demandeEnCours->motif_demande)
+                    <p style="font-size:12px;color:#374151;">
+                        <strong>Your reason:</strong> {{ $demandeEnCours->motif_demande }}
+                    </p>
+                @endif
+            </div>
+            <form id="cancelDeletionForm" method="POST"
+                  action="{{ route('demande-suppression.annuler', $demandeEnCours) }}"
+                  style="display:none;">
+                @csrf @method('DELETE')
+            </form>
+            <button type="button"
+                onclick="showConfirmModal('fa-xmark','Cancel Deletion Request','Are you sure you want to cancel your account deletion request?','Yes, Cancel', function(){ cancelDeletionRequest(); })"
+                style="padding:7px 16px;border-radius:30px;background:white;color:#ef4444;font-size:12px;font-weight:600;border:1.5px solid rgba(239,68,68,0.2);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;display:inline-flex;align-items:center;gap:5px;flex-shrink:0;">
+                <i class="fa-solid fa-xmark"></i> Cancel Request
+            </button>
+        </div>
+    </div>
 
+@else
+
+    {{-- ✅ CHECK RDV FUTURS pour esthéticienne --}}
     @php
-        $demandeEnCours = Auth::user()->demandeSuppressionEnCours();
+        $rdvFutursCount = 0;
+        if (Auth::user()->isEstheticienne()) {
+            $rdvFutursCount = Auth::user()->rendezVousAssignes()
+                ->where('date_debut', '>', now())
+                ->whereIn('statut', ['confirme', 'en_attente'])
+                ->count();
+        }
     @endphp
 
-    @if ($demandeEnCours)
-        {{-- Demande en cours --}}
-        <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-sm font-medium text-orange-800">⏳ Demande de suppression en attente</p>
-                    <p class="mt-1 text-xs text-gray-600">Soumise le {{ $demandeEnCours->created_at->format('d/m/Y à H:i') }}</p>
-                    @if ($demandeEnCours->motif_demande)
-                        <p class="mt-2 text-sm text-gray-700"><strong>Votre motif :</strong> {{ $demandeEnCours->motif_demande }}</p>
-                    @endif
+    @if($rdvFutursCount > 0)
+        {{-- ✅ WARNING : RDV futurs présents --}}
+        <div style="background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.2);border-left:3px solid #f97316;border-radius:12px;padding:16px 20px;margin-bottom:16px;">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+                <div style="width:36px;height:36px;border-radius:10px;background:rgba(249,115,22,0.1);color:#f97316;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
-
-                <form method="POST" action="{{ route('demande-suppression.annuler', $demandeEnCours) }}"
-                      onsubmit="return confirm('Annuler votre demande de suppression ?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 underline">
-                        Annuler ma demande
-                    </button>
-                </form>
+                <div>
+                    <p style="font-size:13px;font-weight:700;color:#f97316;margin-bottom:5px;">
+                        Account deletion not available right now
+                    </p>
+                    <p style="font-size:12px;color:#6b7280;line-height:1.7;margin-bottom:0;">
+                        You have <strong style="color:#f97316;">{{ $rdvFutursCount }} upcoming appointment{{ $rdvFutursCount > 1 ? 's' : '' }}</strong>
+                        (confirmed or pending). You cannot request account deletion until all your future appointments have been completed or cancelled.
+                    </p>
+                </div>
             </div>
         </div>
     @else
-        {{-- Formulaire de demande --}}
-        <form method="POST" action="{{ route('demande-suppression.store') }}">
+        <p style="font-size:13px;color:#6b7280;line-height:1.8;margin-bottom:18px;">
+            Account deletion is <strong style="color:#1a1a2e;">not immediate</strong>. Your request will be reviewed by the administrator,
+            who will verify the absence of upcoming appointments before approving it.
+        </p>
+
+        <form id="deletionRequestForm" method="POST"
+              action="{{ route('profile.demande-suppression') }}"
+              style="display:none;">
             @csrf
-
-            <div class="mb-4">
-                <label for="motif_demande" class="block text-sm font-medium text-gray-700">
-                    Motif de votre demande (optionnel)
-                </label>
-                <textarea id="motif_demande" name="motif_demande" rows="3" maxlength="500"
-                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                          placeholder="Pourquoi souhaitez-vous supprimer votre compte ?">{{ old('motif_demande') }}</textarea>
-            </div>
-
-            @if (session('success'))
-                <div class="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded text-sm">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded text-sm">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            <button type="submit"
-                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700"
-                    onclick="return confirm('Soumettre une demande de suppression de votre compte ?');">
-                {{ __('Demander la suppression de mon compte') }}
-            </button>
         </form>
+
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#9ca3af;margin-bottom:6px;">
+                Reason for deletion (optional)
+            </label>
+            <textarea id="deletionMotif" rows="3" maxlength="500"
+                style="width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid #ede9fe;background:#fdf9ff;font-size:13px;color:#1a1a2e;font-family:'Plus Jakarta Sans',sans-serif;outline:none;resize:vertical;transition:border-color 0.2s;"
+                onfocus="this.style.borderColor='#ef4444'"
+                onblur="this.style.borderColor='#ede9fe'"
+                placeholder="Why do you want to delete your account?"></textarea>
+        </div>
+
+        <button type="button"
+            onclick="showConfirmModal('fa-trash','Request Account Deletion','This will send a deletion request to the administrator. Your account will not be deleted immediately.','Submit Request', function(){ submitDeletionRequest(); })"
+            style="padding:11px 24px;border-radius:30px;background:rgba(239,68,68,0.06);color:#ef4444;font-size:13px;font-weight:700;border:1.5px solid rgba(239,68,68,0.2);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;"
+            onmouseover="this.style.background='rgba(239,68,68,0.12)'"
+            onmouseout="this.style.background='rgba(239,68,68,0.06)'">
+            <i class="fa-solid fa-trash"></i> Request Account Deletion
+        </button>
     @endif
-</section>
+
+@endif

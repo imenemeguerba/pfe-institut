@@ -14,13 +14,19 @@ class CategoryController extends Controller
     /**
      * Affiche la liste de toutes les catégories.
      */
-    public function index(): View
+    public function index(\Illuminate\Http\Request $request): View
     {
-        $categories = Category::withCount('services')
-            ->orderBy('nom')
-            ->paginate(15);
+        $search = $request->query('search', '');
 
-        return view('admin.categories.index', compact('categories'));
+        $query = Category::withCount('services')->orderBy('nom');
+
+        if ($search) {
+            $query->where('nom', 'like', '%' . $search . '%');
+        }
+
+        $categories = $query->paginate(15)->withQueryString();
+
+        return view('admin.categories.index', compact('categories', 'search'));
     }
 
     /**
@@ -117,5 +123,10 @@ class CategoryController extends Controller
         return redirect()
             ->route('admin.categories.index')
             ->with('success', "Catégorie {$status} avec succès.");
+    }
+    public function toggle(\App\Models\Category $category): \Illuminate\Http\RedirectResponse
+    {
+        $category->update(['actif' => !$category->actif]);
+        return back()->with('success', 'Statut de la catégorie mis à jour.');
     }
 }

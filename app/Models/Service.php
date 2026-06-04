@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Service extends Model
 {
     /** @use HasFactory<\Database\Factories\ServiceFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * Les attributs autorisés à l'écriture massive.
@@ -23,6 +24,7 @@ class Service extends Model
         'prix',
         'duree',
         'actif',
+        'types_peau',
     ];
 
     /**
@@ -32,6 +34,7 @@ class Service extends Model
         'prix' => 'integer',
         'duree' => 'integer',
         'actif' => 'boolean',
+        'types_peau' => 'array',
     ];
 
     /**
@@ -98,16 +101,20 @@ class Service extends Model
     {
         $heures = intdiv($this->duree, 60);
         $minutes = $this->duree % 60;
-        
+
         if ($heures === 0) {
             return $minutes . 'min';
         }
-        
+
         if ($minutes === 0) {
             return $heures . 'h';
         }
-        
+
         // Format "1h30" avec minutes sur 2 chiffres
         return $heures . 'h' . str_pad($minutes, 2, '0', STR_PAD_LEFT);
+    }
+    public function variantes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\ServiceVariante::class);
     }
 }
