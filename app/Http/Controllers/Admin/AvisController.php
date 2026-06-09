@@ -51,6 +51,19 @@ class AvisController extends Controller
                 'read_at' => null,
             ]);
         } catch (\Exception $e) {}
+        // ✅ Notifier l'esthéticienne
+try {
+    if ($avi->estheticienne) {
+        $avi->estheticienne->notifications()->create([
+            'id'      => \Illuminate\Support\Str::uuid(),
+            'type'    => 'avis_recu',
+            'data'    => json_encode([
+                'message' => "⭐ A new review has been published on your profile.",
+            ]),
+            'read_at' => null,
+        ]);
+    }
+} catch (\Exception $e) {}
 
         return back()->with('success', 'Review approved and published.');
     }

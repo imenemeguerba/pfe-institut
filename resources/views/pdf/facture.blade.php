@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Facture {{ $facture->numero }}</title>
@@ -144,9 +144,9 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
             </div>
         </div>
         <div class="header-right">
-            <div class="facture-label">Facture</div>
+            <div class="facture-label">Inovice</div>
             <div class="facture-num">{{ $facture->numero }}</div>
-            <div class="facture-date">Émise le {{ $facture->date_emission->format('d/m/Y') }}</div>
+            <div class="facture-date">Issued on {{ $facture->date_emission->format('d/m/Y') }}</div>
         </div>
     </div>
 </div>
@@ -156,15 +156,15 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
 {{-- ══ STATUS BAR ══ --}}
 <div class="status-bar">
     <div class="status-bar-left">
-        <span class="status-badge">✓ FACTURE OFFICIELLE</span>
+        <span class="status-badge">✓ OFFICIAL INVOICE</span>
     </div>
     <div class="status-bar-right">
         <div class="status-meta">
-            Date d'émission : <strong>{{ $facture->date_emission->format('d/m/Y à H:i') }}</strong>
+            Issue date: <strong>{{ $facture->date_emission->format('d/m/Y à H:i') }}</strong>
             &nbsp;·&nbsp;
-            TVA : <strong>{{ number_format($facture->taux_tva, 0) }}%</strong>
+            VAT : <strong>{{ number_format($facture->taux_tva, 0) }}%</strong>
             &nbsp;·&nbsp;
-            Type : <strong>{{ $facture->type === 'rendez_vous' ? 'Rendez-vous' : 'Commande' }}</strong>
+            Type : <strong>{{ $facture->type === 'rendez_vous' ? 'Appointment' : 'Order' }}</strong>
         </div>
     </div>
 </div>
@@ -173,11 +173,11 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
 <div class="parties">
     <div class="partie-cell">
         <div class="partie-box left">
-            <div class="partie-title">Prestataire</div>
+            <div class="partie-title">Provider</div>
             <div class="partie-name">{{ $institut->nom ?? 'Glow Institute' }}</div>
             <div class="partie-info">
-                {{ $institut->adresse ?? 'Adresse non renseignée' }}<br>
-                Tél : {{ $institut->telephone ?? '—' }}<br>
+                {{ $institut->adresse ?? 'Address not provided' }}<br>
+                Phone: {{ $institut->telephone ?? '—' }}<br>
                 Email : {{ $institut->email ?? '—' }}
             </div>
         </div>
@@ -188,7 +188,7 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
             <div class="partie-name">{{ $facture->client->fullName() }}</div>
             <div class="partie-info">
                 {{ $facture->client->email }}<br>
-                Tél : {{ $facture->client->telephone ?? '—' }}
+                Phone: {{ $facture->client->telephone ?? '—' }}
             </div>
         </div>
     </div>
@@ -199,16 +199,16 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
 {{-- ══ DÉTAILS RDV ══ --}}
 @if($facture->estDeRdv() && isset($rdv))
     <div class="section-title-wrap">
-        <div class="section-title">Détail du rendez-vous</div>
+        <div class="section-title">Appointment Details</div>
     </div>
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
                     <th>Service</th>
-                    <th>Esthéticienne</th>
-                    <th>Date & Heure</th>
-                    <th>Prix (DA)</th>
+                    <th>Expert</th>
+                    <th>Date & Time</th>
+                    <th>Price (DA)</th>
                 </tr>
             </thead>
             <tbody>
@@ -228,15 +228,15 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
 {{-- ══ DÉTAILS COMMANDE ══ --}}
 @if($facture->estDeCommande() && isset($commande))
     <div class="section-title-wrap">
-        <div class="section-title">Détail de la commande — {{ $commande->numero }}</div>
+        <div class="section-title">Order Details — {{ $commande->numero }}</div>
     </div>
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>Produit</th>
-                    <th class="td-center">Quantité</th>
-                    <th class="td-right">Prix unitaire (DA)</th>
+                    <th>Product</th>
+                    <th class="td-center">Quantity</th>
+                    <th class="td-right">Unit Price (DA)</th>
                     <th>Total (DA)</th>
                 </tr>
             </thead>
@@ -257,8 +257,8 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
     @if($commande->codePromo)
         <div class="promo-wrap">
             <div class="promo-box">
-                Code promotionnel <strong>{{ $commande->codePromo->code }}</strong> appliqué —
-                Réduction : <strong>{{ number_format($commande->reductionAppliquee(), 0, ',', ' ') }} DA</strong>
+                Promo code <strong>{{ $commande->codePromo->code }}</strong> appliqué —
+                applied — Discount: : <strong>{{ number_format($commande->reductionAppliquee(), 0, ',', ' ') }} DA</strong>
             </div>
         </div>
     @endif
@@ -268,15 +268,15 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
 <div class="totaux-wrap">
     <div class="totaux-inner">
         <div class="total-row ht">
-            <div class="total-row-label">Montant HT</div>
+            <div class="total-row-label">Amount excl. VAT</div>
             <div class="total-row-value">{{ number_format($facture->montant_ht, 0, ',', ' ') }} DA</div>
         </div>
         <div class="total-row tva">
-            <div class="total-row-label">TVA ({{ number_format($facture->taux_tva, 0) }}%)</div>
+            <div class="total-row-label">VAT ({{ number_format($facture->taux_tva, 0) }}%)</div>
             <div class="total-row-value">{{ number_format($facture->montant_tva, 0, ',', ' ') }} DA</div>
         </div>
         <div class="total-row ttc">
-            <div class="total-row-label">TOTAL TTC</div>
+            <div class="total-row-label">TOTAL INCL. VAT</div>
             <div class="total-row-value">{{ number_format($facture->montant_ttc, 0, ',', ' ') }} DA</div>
         </div>
     </div>
@@ -285,10 +285,10 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
 {{-- ══ MERCI ══ --}}
 <div class="thank-wrap">
     <div class="thank-box">
-        <div class="thank-title">Merci de votre confiance 💜</div>
+        <div class="thank-title">Thank you for your trust <span style="color:#b480ff;">&#9829;</span></div>
         <div class="thank-sub">
-            Ce document est généré automatiquement par {{ $institut->nom ?? 'Glow Institute' }}.
-            Pour toute question, contactez-nous à {{ $institut->email ?? '' }}
+            This document was automatically generated by {{ $institut->nom ?? 'Glow Institute' }}.
+            For any questions, contact us at {{ $institut->email ?? '' }}
         </div>
     </div>
 </div>
@@ -299,9 +299,9 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
         {{ $institut->nom ?? 'Glow Institute' }} · {{ $institut->adresse ?? '' }}
     </div>
     <div class="footer-right">
-        Généré le {{ now()->format('d/m/Y à H:i') }}
+        Generated on {{ now()->format('d/m/Y à H:i') }}
         &nbsp;·&nbsp;
-        <span>Document confidentiel</span>
+        <span>Confidential document</span>
     </div>
 </div>
 

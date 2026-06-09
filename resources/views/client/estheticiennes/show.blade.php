@@ -247,7 +247,23 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:#faf8ff; }
         <div class="es-empty">No reviews yet for this expert.</div>
     @else
         @foreach($avis as $av)
-            {{-- review item --}}
+            <div class="review-item">
+                <div class="review-top">
+                    <div class="review-av">{{ strtoupper(substr($av->client->prenom,0,1)) }}</div>
+                    <div>
+                        <div class="review-name">{{ $av->client->prenom }} {{ substr($av->client->nom,0,1) }}.</div>
+                        <div class="review-stars">
+                            @for($i=1;$i<=5;$i++)
+                                <span class="{{ $i<=$av->note?'star-f':'star-e' }}">★</span>
+                            @endfor
+                        </div>
+                    </div>
+                    <div class="review-date">{{ $av->created_at->format('d/m/Y') }}</div>
+                </div>
+                @if($av->commentaire)
+                    <div class="review-text">{{ $av->commentaire }}</div>
+                @endif
+            </div>
         @endforeach
     @endif
 </div>

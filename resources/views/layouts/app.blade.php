@@ -294,7 +294,11 @@
                             @if($rdvEnAttente > 0)<span class="sb-badge">{{ $rdvEnAttente }}</span>@endif
                         </a>
                         <a href="{{ route('estheticienne.avant-apres.index') }}" class="sb-link {{ request()->routeIs('estheticienne.avant-apres.*') ? 'active' : '' }}"><i class="fa-solid fa-images"></i> Before & After</a>
-                        <a href="{{ route('estheticienne.avis.index') }}" class="sb-link {{ request()->routeIs('estheticienne.avis.*') ? 'active' : '' }}"><i class="fa-solid fa-star"></i> My Reviews</a>
+                        @php $sbNewAvis = Auth::user()->notifications()->whereNull('read_at')->where('type','avis_recu')->count(); @endphp
+<a href="{{ route('estheticienne.avis.index') }}" class="sb-link {{ request()->routeIs('estheticienne.avis.*') ? 'active' : '' }}">
+    <i class="fa-solid fa-star"></i> My Reviews
+    @if($sbNewAvis > 0)<span class="sb-badge purple">{{ $sbNewAvis }}</span>@endif
+</a>
                     </div>
                     <div class="sb-section">
                         <div class="sb-section-label">Account</div>

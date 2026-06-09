@@ -60,7 +60,7 @@ class AvisController extends Controller
             ->first();
 
         if ($existant) {
-            return back()->with('error', 'Vous avez déjà soumis un avis pour ce rendez-vous.');
+            return back()->with('error', 'You have already submitted a review for this appointment.');
         }
 
         Avis::create([
@@ -79,13 +79,13 @@ class AvisController extends Controller
                 ?->notifications()->create([
                     'id'      => \Illuminate\Support\Str::uuid(),
                     'type'    => 'nouvel_avis',
-                    'data'    => json_encode(['message' => "⭐ Nouvel avis en attente de modération."]),
+                    'data'    => json_encode(['message' => "⭐ New review pending moderation."]),
                     'read_at' => null,
                 ]);
         } catch (\Exception $e) {}
 
         return redirect()->route('client.avis.index')
-            ->with('success', 'Votre avis a été soumis et sera publié après modération.');
+            ->with('success', 'Your review has been submitted and will be published after moderation.');
     }
 
     /**
@@ -117,7 +117,7 @@ class AvisController extends Controller
             ->first();
 
         if ($existant) {
-            return back()->with('error', 'Vous avez déjà un avis sur l\'institut.');
+            return back()->with('error', 'You already have a review for the institute.');
         }
 
         Avis::create([
@@ -133,13 +133,13 @@ class AvisController extends Controller
                 ?->notifications()->create([
                     'id'      => \Illuminate\Support\Str::uuid(),
                     'type'    => 'nouvel_avis',
-                    'data'    => json_encode(['message' => "⭐ Nouvel avis institut en attente de modération."]),
+                    'data'    => json_encode(['message' => "⭐ New institute review pending moderation."]),
                     'read_at' => null,
                 ]);
         } catch (\Exception $e) {}
 
         return redirect()->route('client.avis.index')
-            ->with('success', 'Votre avis a été soumis et sera publié après modération.');
+            ->with('success', 'Your review has been submitted and will be published after moderation.');
     }
 
     public function modifier(Request $request, Avis $avi): RedirectResponse
@@ -157,13 +157,13 @@ class AvisController extends Controller
             'statut'      => 'en_attente', // Repart en modération
         ]);
 
-        return back()->with('success', 'Avis modifié — repassé en modération.');
+        return back()->with('success', 'Review updated — sent back for moderation.');
     }
 
     public function supprimer(Request $request, Avis $avi): RedirectResponse
     {
         if ($avi->client_id !== $request->user()->id) abort(403);
         $avi->delete();
-        return back()->with('success', 'Avis supprimé.');
+        return back()->with('success', 'Review deleted.');
     }
 }
