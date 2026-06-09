@@ -12,7 +12,7 @@
 
     {{-- ── SIGN IN FORM ── --}}
     <div class="form-box login">
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" novalidate>
             @csrf
             <h1>Sign In</h1>
 
@@ -38,7 +38,7 @@
 
     {{-- ── SIGN UP FORM ── --}}
     <div class="form-box register">
-        <form method="POST" action="{{ route('register') }}" id="register-form">
+        <form method="POST" action="{{ route('register') }}" id="register-form" novalidate>
             @csrf
             <h1>Sign Up</h1>
 

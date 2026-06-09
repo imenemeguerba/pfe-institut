@@ -170,7 +170,7 @@
             <div class="error-box">{{ $errors->first() }}</div>
         @endif
 
-        <form method="POST" action="{{ route('register.estheticienne') }}">
+        <form method="POST" action="{{ route('register.estheticienne') }}" novalidate>
             @csrf
 
             {{-- Nom + Prénom --}}

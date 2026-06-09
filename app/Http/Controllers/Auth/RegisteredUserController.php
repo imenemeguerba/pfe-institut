@@ -30,22 +30,25 @@ class RegisteredUserController extends Controller
     {
         // ✅ FIX: utiliser Validator::make pour contrôler la redirection
         $validator = Validator::make($request->all(), [
-            'nom'            => ['required', 'string', 'max:100'],
-            'prenom'         => ['required', 'string', 'max:100'],
-            'date_naissance' => ['required', 'date', 'before:' . now()->subYears(18)->format('Y-m-d')],
-            'telephone'      => ['required', 'string', 'max:20'],
-            'email'          => ['required', 'string', 'lowercase', 'email', 'max:255', new EmailDisponiblePourInscription()],
-            'password'       => ['required', 'confirmed', Rules\Password::defaults()],
+             'nom'            => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZÀ-ÿ\s\-]+$/'],
+             'prenom'         => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZÀ-ÿ\s\-]+$/'],
+             'date_naissance' => ['required', 'date', 'before:' . now()->subYears(18)->format('Y-m-d')],
+             'telephone'      => ['required', 'string', 'regex:/^(05|06|07)[0-9]{8}$/'],
+             'email'          => ['required', 'string', 'lowercase', 'email', 'max:255', new EmailDisponiblePourInscription()],
+             'password'       => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            'nom.required'            => 'Le nom est obligatoire.',
-            'prenom.required'         => 'Le prénom est obligatoire.',
-            'date_naissance.required' => 'La date de naissance est obligatoire.',
-            'date_naissance.before'   => 'Vous devez avoir au moins 18 ans.',
-            'telephone.required'      => 'Le téléphone est obligatoire.',
-            'email.required'          => "L'email est obligatoire.",
-            'email.email'             => "L'email doit être valide.",
-            'password.required'       => 'Le mot de passe est obligatoire.',
-            'password.confirmed'      => 'Les mots de passe ne correspondent pas.',
+            'nom.required'            => 'Last name is required.',
+            'nom.regex'               => 'Last name must contain letters only.',
+            'prenom.required'         => 'First name is required.',
+            'prenom.regex'            => 'First name must contain letters only.',
+            'date_naissance.required' => 'Date of birth is required.',
+            'date_naissance.before'   => 'You must be at least 18 years old.',
+            'telephone.required'      => 'Phone number is required.',
+            'telephone.regex'         => 'Phone number must start with 05, 06 or 07 followed by 8 digits.',
+            'email.required'          => 'Email is required.',
+            'email.email'             => 'Please enter a valid email address.',
+            'password.required'       => 'Password is required.',
+            'password.confirmed'      => 'Passwords do not match.',
         ]);
 
         // ✅ FIX: toujours rediriger vers route('register') — jamais back()
@@ -88,7 +91,7 @@ class RegisteredUserController extends Controller
         }
 
         return redirect()->route('register.verify.otp')
-            ->with('success', 'Un code de vérification a été envoyé à ' . $request->email);
+            ->with('success', 'A verification code has been sent to ' . $request->email);
     }
 
     // ── Étape 3 : Formulaire vérification OTP ────────────────────────────
@@ -109,7 +112,7 @@ class RegisteredUserController extends Controller
 
         $data = session('register_data');
         if (!$data) {
-            return redirect()->route('register')->withErrors(['otp' => 'Session expirée. Réessayez.']);
+            return redirect()->route('register')->withErrors(['otp' => 'Session expired. Please try again.']);
         }
 
         $otpRecord = RegistrationOtp::where('email', $data['email'])
@@ -117,7 +120,7 @@ class RegisteredUserController extends Controller
             ->first();
 
         if (!$otpRecord || $otpRecord->estExpire()) {
-            return back()->withErrors(['otp' => 'Code incorrect ou expiré. Réessayez.']);
+            return back()->withErrors(['otp' => 'Incorrect or expired code. Please try again.']);
         }
 
         // Créer le compte
@@ -171,6 +174,6 @@ class RegisteredUserController extends Controller
             Mail::to($data['email'])->send(new OtpInscription($otp, $data['prenom']));
         } catch (\Exception $e) {}
 
-        return back()->with('success', 'Nouveau code envoyé !');
+        return back()->with('success', 'New verification code sent!');
     }
 }
