@@ -708,9 +708,11 @@ function toggleFavori(btn, produitId) {
             <div class="contact-info">
                 @if($institut->adresse)
                     <div class="contact-item">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span>{{ $institut->adresse }}@if($institut->ville), {{ $institut->ville }}@endif</span>
-                    </div>
+                      <i class="fa-solid fa-location-dot"></i>
+                      <a href="https://www.google.com/maps/search/{{ urlencode(($institut->adresse ?? '').' '.($institut->ville ?? '')) }}" target="_blank" style="color:inherit;text-decoration:none;">
+                          {{ $institut->adresse }}@if($institut->ville), {{ $institut->ville }}@endif
+                       </a>
+                   </div>
                 @endif
                 @if($institut->telephone)
                     <div class="contact-item">
@@ -720,16 +722,22 @@ function toggleFavori(btn, produitId) {
                 @endif
                 @if($institut->email)
                     <div class="contact-item">
-                        <i class="fa-solid fa-envelope"></i>
-                        <span>{{ $institut->email }}</span>
-                    </div>
+                      <i class="fa-solid fa-envelope"></i>
+                      <a href="https://mail.google.com/mail/?view=cm&to={{ $institut->email }}" target="_blank" style="color:inherit;text-decoration:none;">{{ $institut->email }}</a>
+                   </div>
                 @endif
             </div>
-            <div class="social-links footer-socials">
-                <a href="{{ $institut->instagram ?? '#' }}" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-                <a href="{{ $institut->facebook ?? '#' }}" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="{{ $institut->whatsapp ? 'https://wa.me/'.preg_replace('/[^0-9]/', '', $institut->whatsapp) : '#' }}" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
-            </div>
+            <div class="social-links footer-socials" style="display:flex;gap:10px;margin-top:12px;">
+              <a href="{{ $institut->instagram ?? '#' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
+                  <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="{{ $institut->facebook ?? '#' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
+                  <i class="fa-brands fa-facebook-f"></i>
+              </a>
+              <a href="{{ $institut->whatsapp ? 'https://wa.me/'.preg_replace('/[^0-9]/', '', $institut->whatsapp) : '#' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
+                   <i class="fa-brands fa-whatsapp"></i>
+              </a>
+           </div>
         </div>
         <div class="map-container">
             @if($institut->latitude && $institut->longitude)
@@ -946,6 +954,31 @@ function toggleFavori(btn, produitId) {
 .client-notif-empty {
     text-align:center; padding:32px 16px;
     font-size:12px; color:#d1d5db;
+}
+/* ── SOCIAL ICONS FIX ── */
+.footer-socials a {
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:40px !important;
+    height:40px !important;
+    border-radius:50% !important;
+    background:linear-gradient(135deg,#b480ff,#d3aa95) !important;
+    color:white !important;
+    font-size:16px !important;
+    text-decoration:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+}
+.footer-socials a i {
+    color:white !important;
+    opacity:1 !important;
+    visibility:visible !important;
+}
+.footer-socials {
+    display:flex !important;
+    gap:10px !important;
+    margin-top:12px !important;
 }
 </style>
 
