@@ -60,7 +60,7 @@ class CodePromoController extends Controller
 
         return redirect()
             ->route('admin.codes-promo.index')
-            ->with('success', 'Code promotionnel créé avec succès.');
+            ->with('success', 'Promo code created successfully.');
     }
 
     public function show(CodePromo $codePromo): View
@@ -82,34 +82,34 @@ class CodePromoController extends Controller
 
         return redirect()
             ->route('admin.codes-promo.index')
-            ->with('success', 'Code promotionnel mis à jour avec succès.');
+            ->with('success', 'Promo code updated successfully.');
     }
 
     public function destroy(CodePromo $codePromo): RedirectResponse
     {
         if ($codePromo->nombre_utilisations > 0) {
-            return back()->with('error', 'Ce code a déjà été utilisé. Désactivez-le plutôt.');
+            return back()->with('error', 'This code has already been used. Deactivate it instead.');
         }
 
         $codePromo->delete();
 
         return redirect()
             ->route('admin.codes-promo.index')
-            ->with('success', 'Code promotionnel supprimé avec succès.');
+            ->with('success', 'Promo code deleted successfully.');
     }
 
     public function toggleActif(CodePromo $codePromo): RedirectResponse
     {
         $codePromo->update(['actif' => !$codePromo->actif]);
-        $status = $codePromo->actif ? 'activé' : 'désactivé';
+        $status = $codePromo->actif ? 'activated' : 'deactivated';
 
         return redirect()
             ->route('admin.codes-promo.index')
-            ->with('success', "Code {$status} avec succès.");
+            ->with('success', "Promo code {$status} successfully.");
     }
     public function toggle(\App\Models\CodePromo $codePromo): \Illuminate\Http\RedirectResponse
     {
         $codePromo->update(['actif' => !$codePromo->actif]);
-        return back()->with('success', 'Statut du code promo mis à jour.');
+        return back()->with('success', 'Promo code status updated.');
     }
 }

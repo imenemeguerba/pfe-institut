@@ -46,14 +46,14 @@ class DisponibiliteController extends Controller
             ->exists();
 
         if ($chevauche) {
-            return back()->withInput()->with('error', 'Ce créneau chevauche une disponibilité existante.');
+            return back()->withInput()->with('error', 'This slot overlaps with an existing availability.');
         }
 
         Disponibilite::create($data);
 
         return redirect()
             ->route('estheticienne.planning.index')
-            ->with('success', 'Disponibilité ajoutée avec succès.');
+            ->with('success', 'Availability added successfully.');
     }
 
     public function edit(Disponibilite $disponibilite, Request $request): View
@@ -89,14 +89,14 @@ class DisponibiliteController extends Controller
             ->exists();
 
         if ($chevauche) {
-            return back()->withInput()->with('error', 'Ce créneau chevauche une autre disponibilité.');
+            return back()->withInput()->with('error', 'This slot overlaps with another availability.');
         }
 
         $disponibilite->update($data);
 
         return redirect()
             ->route('estheticienne.planning.index')
-            ->with('success', 'Disponibilité modifiée avec succès.');
+            ->with('success', 'Availability updated successfully.');
     }
 
     public function destroy(Disponibilite $disponibilite, Request $request): RedirectResponse
@@ -109,6 +109,6 @@ class DisponibiliteController extends Controller
 
         return redirect()
             ->route('estheticienne.planning.index')
-            ->with('success', 'Disponibilité supprimée.');
+            ->with('success', 'Availability deleted.');
     }
 }

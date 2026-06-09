@@ -67,7 +67,7 @@ class DemandeSuppressionController extends Controller
     public function accepter(DemandeSuppression $demande): RedirectResponse
     {
         if (!$demande->estEnAttente()) {
-            return back()->with('error', 'Cette demande a déjà été traitée.');
+            return back()->with('error', 'This request has already been processed.');
         }
 
         $user = $demande->user;
@@ -89,7 +89,7 @@ class DemandeSuppressionController extends Controller
 
         if ($rdvFuturs > 0) {
             return back()->with('error',
-                'Impossible d\'accepter : l\'utilisateur a ' . $rdvFuturs . ' rendez-vous à venir. Veuillez refuser cette demande.'
+                'Cannot accept: this user has ' . $rdvFuturs . ' upcoming appointment(s). Please refuse this request.'
             );
         }
 
@@ -105,19 +105,19 @@ class DemandeSuppressionController extends Controller
         // L'email sera réutilisable dans 1 mois
         $user->update([
             'statut_compte' => 'supprime',
-            'motif_statut' => 'Suppression demandée par l\'utilisateur',
+            'motif_statut' => 'Account deletion requested by user',
             'email_libre_le' => now()->addMonth(),
         ]);
 
         return redirect()
             ->route('admin.demandes-suppression.index')
-            ->with('success', 'La demande a été acceptée. Le compte de ' . $nom . ' a été marqué comme supprimé. L\'email sera réutilisable dans 1 mois.');
+            ->with('success', 'Request accepted. The account of ' . $nom . ' has been marked as deleted. The email will be available again in 1 month.');
     }
 
     public function refuser(Request $request, DemandeSuppression $demande): RedirectResponse
     {
         if (!$demande->estEnAttente()) {
-            return back()->with('error', 'Cette demande a déjà été traitée.');
+            return back()->with('error', 'This request has already been processed.');
         }
 
         $request->validate([
@@ -132,6 +132,6 @@ class DemandeSuppressionController extends Controller
 
         return redirect()
             ->route('admin.demandes-suppression.index')
-            ->with('success', 'La demande a été refusée. L\'utilisateur en sera notifié.');
+            ->with('success', 'Request refused. The user will be notified.');
     }
 }

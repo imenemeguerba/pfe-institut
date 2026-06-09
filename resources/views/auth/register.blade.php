@@ -38,12 +38,14 @@
 
     {{-- ── SIGN UP FORM ── --}}
     <div class="form-box register">
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register') }}" id="register-form">
             @csrf
             <h1>Sign Up</h1>
 
             @if($errors->any())
-                <p class="msg-error">{{ $errors->first() }}</p>
+                <p class="msg-error">
+                    <i class="fa-solid fa-circle-xmark"></i> {{ $errors->first() }}
+                </p>
             @endif
 
             <div class="input-row">
@@ -75,14 +77,21 @@
 
             <div class="input-row">
                 <div class="input-box">
-                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="password" id="reg_password"
+                           placeholder="Password" required autocomplete="new-password">
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" name="password_confirmation" placeholder="Confirm" required>
+                    <input type="password" name="password_confirmation" id="reg_confirm"
+                           placeholder="Confirm Password" required autocomplete="new-password">
                     <i class="fa-solid fa-lock"></i>
                 </div>
             </div>
+
+            {{-- Erreur mots de passe différents --}}
+            <p id="pwd-error" style="color:#ef4444;font-size:12px;margin:-6px 0 8px;display:none;">
+                <i class="fa-solid fa-circle-xmark"></i> Passwords do not match.
+            </p>
 
             <div class="law-check">
                 <input type="checkbox" id="loi1807r" name="loi1807" required>
@@ -93,7 +102,7 @@
                 </label>
             </div>
 
-            <button type="submit" class="btn">Sign Up</button>
+            <button type="submit" class="btn" id="reg-submit-btn">Sign Up</button>
             <a href="{{ route('landingpage') }}" class="back-home">← Back to Home</a>
         </form>
     </div>
@@ -115,11 +124,45 @@
 </div>
 
 <script>
-const container   = document.querySelector('.container');
-const registerBtn = document.querySelector('.register-btn');
-const loginBtn    = document.querySelector('.login-btn');
-registerBtn.addEventListener('click', () => container.classList.add('active'));
-loginBtn.addEventListener('click',    () => container.classList.remove('active'));
+var container   = document.querySelector('.container');
+var registerBtn = document.querySelector('.register-btn');
+var loginBtn    = document.querySelector('.login-btn');
+
+registerBtn.addEventListener('click', function() { container.classList.add('active'); });
+loginBtn.addEventListener('click',    function() { container.classList.remove('active'); });
+
+// ── Validation mot de passe en temps réel ──────────────────────────────
+var pwd     = document.getElementById('reg_password');
+var confirm = document.getElementById('reg_confirm');
+var pwdErr  = document.getElementById('pwd-error');
+var submitBtn = document.getElementById('reg-submit-btn');
+
+function checkPasswords() {
+    if (confirm.value.length === 0) {
+        pwdErr.style.display = 'none';
+        return true;
+    }
+    if (pwd.value !== confirm.value) {
+        pwdErr.style.display = 'block';
+        confirm.style.borderColor = '#ef4444';
+        return false;
+    } else {
+        pwdErr.style.display = 'none';
+        confirm.style.borderColor = '#10b981';
+        return true;
+    }
+}
+
+pwd.addEventListener('input',     function() { if (confirm.value.length > 0) checkPasswords(); });
+confirm.addEventListener('input', function() { checkPasswords(); });
+
+// ── Bloquer la soumission si mots de passe différents ─────────────────
+document.getElementById('register-form').addEventListener('submit', function(e) {
+    if (!checkPasswords()) {
+        e.preventDefault();
+        confirm.focus();
+    }
+});
 </script>
 </body>
 </html>

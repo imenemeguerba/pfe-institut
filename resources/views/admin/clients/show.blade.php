@@ -24,7 +24,6 @@
 .abtn.back    { background:#fdf9ff; color:#b480ff; border:1.5px solid #ede9fe; }
 .abtn.block   { background:rgba(239,68,68,0.06); color:#ef4444; border:1.5px solid rgba(239,68,68,0.2); }
 .abtn.unblock { background:rgba(16,185,129,0.08); color:#059669; border:1.5px solid rgba(16,185,129,0.2); }
-.abtn.delete  { background:white; color:#ef4444; border:1.5px solid rgba(239,68,68,0.2); }
 
 .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px; }
 .stat-card  { background:white; border-radius:14px; border:1px solid #ede9fe; padding:16px 18px; text-align:center; }
@@ -96,21 +95,12 @@
                     onclick="document.getElementById('modal-bloquer').classList.add('open')">
                     <i class="fa-solid fa-ban"></i> Block
                 </button>
-                {{-- Delete — glowConfirm ✅ --}}
-                <form id="form-del-client" action="{{ route('admin.clients.destroy', $client) }}" method="POST" style="display:inline;">
-                    @csrf @method('DELETE')
-                    <button type="button" class="abtn delete"
-                        onclick="glowConfirm('Delete Account','Permanently delete this account? The email will be banned.','Delete','fa-trash','#ef4444',function(){ document.getElementById('form-del-client').submit(); })">
-                        <i class="fa-solid fa-trash"></i> Delete
-                    </button>
-                </form>
+
             @endif
             @if($client->estBloque())
-                {{-- Unblock — glowConfirm ✅ --}}
                 <form id="form-unblock" action="{{ route('admin.clients.debloquer', $client) }}" method="POST" style="display:inline;">
                     @csrf @method('PATCH')
-                    <button type="button" class="abtn unblock"
-                        onclick="glowConfirm('Unblock Client','Restore access for this client?','Unblock','fa-rotate-right','green',function(){ document.getElementById('form-unblock').submit(); })">
+                    <button type="submit" class="abtn unblock">
                         <i class="fa-solid fa-rotate-right"></i> Unblock
                     </button>
                 </form>
@@ -204,7 +194,7 @@
             <div class="modal-t">Block Client</div>
             <div class="modal-warn">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                Blocking is permanent. The email will be banned — the client cannot re-register.
+                The client will no longer be able to sign in. You can unblock them at any time.
             </div>
             <form action="{{ route('admin.clients.bloquer', $client) }}" method="POST">
                 @csrf @method('PATCH')

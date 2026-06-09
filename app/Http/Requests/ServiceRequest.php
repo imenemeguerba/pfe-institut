@@ -26,7 +26,7 @@ class ServiceRequest extends FormRequest
             'category_id' => ['required', 'exists:categories,id'],
             'nom' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'prix' => ['required', 'integer', 'min:0'],
             'duree' => ['required', 'integer', 'min:5', 'max:480'],
             'actif' => ['nullable', 'boolean'],
@@ -39,23 +39,23 @@ class ServiceRequest extends FormRequest
      * Messages d'erreur personnalisés en français.
      */
     public function messages(): array
-    {
-        return [
-            'category_id.required' => 'Veuillez choisir une catégorie.',
-            'category_id.exists' => 'La catégorie sélectionnée n\'existe pas.',
-            'nom.required' => 'Le nom du service est obligatoire.',
-            'nom.max' => 'Le nom ne peut pas dépasser 150 caractères.',
-            'prix.required' => 'Le prix est obligatoire.',
-            'prix.integer' => 'Le prix doit être un nombre entier.',
-            'prix.min' => 'Le prix ne peut pas être négatif.',
-            'duree.required' => 'La durée est obligatoire.',
-            'duree.integer' => 'La durée doit être un nombre entier.',
-            'duree.min' => 'La durée minimum est de 5 minutes.',
-            'duree.max' => 'La durée maximum est de 8 heures (480 minutes).',
-            'image.mimes' => 'L\'image doit être au format JPG, PNG ou WebP.',
-            'image.max' => 'L\'image ne doit pas dépasser 2 Mo.',
-        ];
-    }
+{
+    return [
+        'category_id.required' => 'Please select a category.',
+        'category_id.exists'   => 'The selected category does not exist.',
+        'nom.required'         => 'Service name is required.',
+        'nom.max'              => 'Service name cannot exceed 150 characters.',
+        'prix.required'        => 'Price is required.',
+        'prix.integer'         => 'Price must be a whole number.',
+        'prix.min'             => 'Price cannot be negative.',
+        'duree.required'       => 'Duration is required.',
+        'duree.integer'        => 'Duration must be a whole number.',
+        'duree.min'            => 'Minimum duration is 5 minutes.',
+        'duree.max'            => 'Maximum duration is 8 hours (480 minutes).',
+        'image.mimes'          => 'Image must be in JPG, PNG or WebP format.',
+        'image.max'            => 'Image must not exceed 5 MB.',
+    ];
+}
 
     /**
      * Préparer les données avant validation.

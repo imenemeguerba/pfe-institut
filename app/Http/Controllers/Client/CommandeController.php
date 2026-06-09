@@ -109,10 +109,10 @@ class CommandeController extends Controller
             try {
                 \App\Models\User::where('role', 'admin')->first()
                     ?->notifications()->create([
-                        'type'    => 'nouvelle_commande',
-                        'titre'   => '🛒 Nouvelle commande',
-                        'message' => "Le client {$user->fullName()} vient de passer la commande {$commande->numero}.",
-                        'lu'      => false,
+                      'id'      => \Illuminate\Support\Str::uuid(),
+                      'type'    => 'nouvelle_commande',
+                      'data'    => json_encode(['message' => "🛒 New order {$commande->numero} from {$user->fullName()}"]),
+                      'read_at' => null,
                     ]);
             } catch (\Exception $e) {}
         });

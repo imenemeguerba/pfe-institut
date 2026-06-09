@@ -46,13 +46,13 @@ class AvisController extends Controller
                 'id'      => \Illuminate\Support\Str::uuid(),
                 'type'    => 'avis_approuve',
                 'data'    => json_encode([
-                    'message' => '✅ Votre avis a été approuvé et publié.',
+                    'message' => '✅  Your review has been approved and published.',
                 ]),
                 'read_at' => null,
             ]);
         } catch (\Exception $e) {}
 
-        return back()->with('success', 'Avis approuvé et publié.');
+        return back()->with('success', 'Review approved and published.');
     }
 
     public function refuser(Request $request, Avis $avi): RedirectResponse
@@ -72,12 +72,12 @@ class AvisController extends Controller
                 'id'      => \Illuminate\Support\Str::uuid(),
                 'type'    => 'avis_refuse',
                 'data'    => json_encode([
-                    'message' => "❌ Votre avis a été refusé. Motif : {$request->motif_refus}",
+                    'message' => "❌ Your review has been rejected. Reason: {$request->motif_refus}",
                 ]),
                 'read_at' => null,
             ]);
         } catch (\Exception $e) {}
 
-        return back()->with('success', 'Avis refusé.');
+        return back()->with('success', 'Review rejected.');
     }
 }

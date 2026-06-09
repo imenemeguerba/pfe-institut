@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/Admin/MessageContactController.php
 
 namespace App\Http\Controllers\Admin;
 
@@ -17,8 +16,8 @@ class MessageContactController extends Controller
 
         $query = MessageContact::with('user')->orderByDesc('created_at');
 
-        if ($filtre === 'non_lus')   $query->where('lu', false);
-        if ($filtre === 'repondus')  $query->whereNotNull('reponse_admin');
+        if ($filtre === 'non_lus')    $query->where('lu', false);
+        if ($filtre === 'repondus')   $query->whereNotNull('reponse_admin');
         if ($filtre === 'en_attente') $query->whereNull('reponse_admin');
 
         $messages = $query->paginate(15)->withQueryString();
@@ -35,7 +34,6 @@ class MessageContactController extends Controller
 
     public function show(MessageContact $messagesContact): View
     {
-        // Marquer comme lu
         if (!$messagesContact->lu) {
             $messagesContact->update(['lu' => true]);
         }
@@ -54,25 +52,24 @@ class MessageContactController extends Controller
             'repondu_at'    => now(),
         ]);
 
-        // Notifier l'utilisateur
         try {
             $messagesContact->user->notifications()->create([
                 'id'      => \Illuminate\Support\Str::uuid(),
                 'type'    => 'reponse_contact',
                 'data'    => json_encode([
-                    'message' => "💬 L'administration a répondu à votre message : {$messagesContact->sujet}",
+                    'message' => "💬 The administration has replied to your message: {$messagesContact->sujet}",
                 ]),
                 'read_at' => null,
             ]);
         } catch (\Exception $e) {}
 
-        return back()->with('success', 'Réponse envoyée avec succès.');
+        return back()->with('success', 'Reply sent successfully.');
     }
 
     public function destroy(MessageContact $messagesContact): RedirectResponse
     {
         $messagesContact->delete();
         return redirect()->route('admin.messages-contact.index')
-            ->with('success', 'Message supprimé.');
+            ->with('success', 'Message deleted successfully.');
     }
 }

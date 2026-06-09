@@ -51,7 +51,7 @@ class FactureController extends Controller
     public function telecharger(Facture $facture): StreamedResponse|\Illuminate\Http\Response
     {
         if (!$facture->chemin_pdf || !Storage::disk('public')->exists($facture->chemin_pdf)) {
-            return back()->with('error', 'PDF non disponible pour cette facture.');
+            return back()->with('error', 'PDF not available for this invoice.');
         }
 
         return Storage::disk('public')->download(

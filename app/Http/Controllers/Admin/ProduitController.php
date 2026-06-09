@@ -65,7 +65,7 @@ if ($request->has('variantes')) {
 
 
         return redirect()->route('admin.produits.index')
-            ->with('success', 'Produit créé avec succès.');
+            ->with('success', 'Product created successfully.');
     }
 
     public function edit(Produit $produit): View
@@ -90,26 +90,26 @@ if ($request->hasFile('image')) {
 }
 
         return redirect()->route('admin.produits.index')
-            ->with('success', 'Produit modifié avec succès.');
+            ->with('success', 'Product updated successfully.');
     }
 
     public function destroy(Produit $produit): RedirectResponse
     {
         $commandesCount = $produit->commandes()->count();
         if ($commandesCount > 0) {
-            return back()->with('error', "Impossible — ce produit a été commandé {$commandesCount} fois. Désactivez-le plutôt.");
+            return back()->with('error', "Cannot delete — this product has been ordered {$commandesCount} time(s). Deactivate it instead.");
         }
 
         if ($produit->image) Storage::disk('public')->delete($produit->image);
         $produit->delete();
 
         return redirect()->route('admin.produits.index')
-            ->with('success', 'Produit supprimé.');
+            ->with('success', 'Product deleted successfully.');
     }
 
     public function toggle(Produit $produit): RedirectResponse
     {
         $produit->update(['actif' => !$produit->actif]);
-        return back()->with('success', 'Statut du produit mis à jour.');
+        return back()->with('success', 'Product status updated.');
     }
 }

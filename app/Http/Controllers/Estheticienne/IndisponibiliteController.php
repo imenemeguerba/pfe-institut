@@ -25,10 +25,10 @@ class IndisponibiliteController extends Controller
             'date_fin_jour' => ['required', 'date', 'after_or_equal:date_debut_jour'],
             'motif' => ['nullable', 'string', 'max:500'],
         ], [
-            'date_debut_jour.required' => 'La date de début est obligatoire.',
-            'date_debut_jour.after_or_equal' => 'La date de début doit être aujourd\'hui ou plus tard.',
-            'date_fin_jour.required' => 'La date de fin est obligatoire.',
-            'date_fin_jour.after_or_equal' => 'La date de fin doit être après ou égale à la date de début.',
+            'date_debut_jour.required' => 'Start date is required.',
+            'date_debut_jour.after_or_equal' => 'Start date must be today or later.',
+            'date_fin_jour.required' => 'End date is required.',
+            'date_fin_jour.after_or_equal' => 'End date must be after or equal to the start date.',
         ]);
 
         $dateDebut = Carbon::parse($validated['date_debut_jour'])->startOfDay();
@@ -42,7 +42,7 @@ class IndisponibiliteController extends Controller
             ->count();
 
         if ($rdvConflits > 0) {
-            return back()->withInput()->with('error', "Vous avez {$rdvConflits} rendez-vous planifié(s) pendant cette période. Veuillez d'abord les annuler ou choisir d'autres dates.");
+            return back()->withInput()->with('error', "You have {$rdvConflits} scheduled appointment(s) during this period. Please cancel them first or choose different dates.");
         }
 
         Indisponibilite::create([
@@ -53,7 +53,7 @@ class IndisponibiliteController extends Controller
             'motif' => $validated['motif'] ?? null,
         ]);
 
-        return redirect()->route('estheticienne.planning.index')->with('success', 'Absence enregistrée avec succès.');
+        return redirect()->route('estheticienne.planning.index')->with('success', 'Absence recorded successfully.');
     }
 
     public function edit(Indisponibilite $indisponibilite): View
@@ -87,7 +87,7 @@ class IndisponibiliteController extends Controller
             'motif' => $validated['motif'] ?? null,
         ]);
 
-        return redirect()->route('estheticienne.planning.index')->with('success', 'Absence modifiée.');
+        return redirect()->route('estheticienne.planning.index')->with('success', 'Absence updated.');
     }
 
     public function destroy(Indisponibilite $indisponibilite): RedirectResponse
@@ -96,6 +96,6 @@ class IndisponibiliteController extends Controller
             abort(403);
         }
         $indisponibilite->delete();
-        return redirect()->route('estheticienne.planning.index')->with('success', 'Absence supprimée.');
+        return redirect()->route('estheticienne.planning.index')->with('success', 'Absence deleted.');
     }
 }

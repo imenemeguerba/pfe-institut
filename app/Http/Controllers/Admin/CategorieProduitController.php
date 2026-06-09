@@ -35,7 +35,7 @@ class CategorieProduitController extends Controller
         ]);
 
         return redirect()->route('admin.categories-produits.index')
-            ->with('success', 'Catégorie créée avec succès.');
+            ->with('success', 'Product category created successfully.');
     }
 
     public function edit(CategorieProduit $categorieProduit): View
@@ -57,22 +57,22 @@ class CategorieProduitController extends Controller
         ]);
 
         return redirect()->route('admin.categories-produits.index')
-            ->with('success', 'Catégorie modifiée avec succès.');
+            ->with('success', 'Product category updated successfully.');
     }
 
     public function toggle(CategorieProduit $categorieProduit): RedirectResponse
     {
         $categorieProduit->update(['actif' => !$categorieProduit->actif]);
-        $status = $categorieProduit->actif ? 'activée' : 'désactivée';
-        return back()->with('success', "Catégorie {$status}.");
+        $status = $categorieProduit->actif ? 'activated' : 'deactivated';
+        return back()->with('success', "Category {$status}.");
     }
 
     public function destroy(CategorieProduit $categorieProduit): RedirectResponse
     {
         if ($categorieProduit->produits()->count() > 0) {
-            return back()->with('error', 'Impossible — cette catégorie contient des produits.');
+            return back()->with('error', 'Cannot delete — this category contains products.');
         }
         $categorieProduit->delete();
-        return back()->with('success', 'Catégorie supprimée.');
+        return back()->with('success', 'Category deleted successfully.');
     }
 }

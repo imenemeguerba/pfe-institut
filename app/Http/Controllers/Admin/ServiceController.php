@@ -77,7 +77,7 @@ class ServiceController extends Controller
 
         return redirect()
             ->route('admin.services.index')
-            ->with('success', 'Service créé avec succès.');
+            ->with('success', 'Service created successfully.');
     }
 
     public function edit(Service $service): View
@@ -122,7 +122,7 @@ class ServiceController extends Controller
 
         return redirect()
             ->route('admin.services.index')
-            ->with('success', 'Service modifié avec succès.');
+            ->with('success', 'Service updated successfully.');
     }
 
     public function destroy(Service $service): RedirectResponse
@@ -131,7 +131,7 @@ class ServiceController extends Controller
         if ($rdvCount > 0) {
             return redirect()
                 ->route('admin.services.index')
-                ->with('error', 'Impossible : ce service a été utilisé dans ' . $rdvCount . ' rendez-vous. Désactivez-le plutôt.');
+                ->with('error', 'Cannot delete: this service was used in ' . $rdvCount . ' appointment(s). Deactivate it instead.');
         }
 
         if ($service->image) {
@@ -144,14 +144,14 @@ class ServiceController extends Controller
 
         return redirect()
             ->route('admin.services.index')
-            ->with('success', 'Service supprimé avec succès.');
+            ->with('success', 'Service deleted successfully.');
     }
 
     public function toggle(Service $service): RedirectResponse
     {
         $service->update(['actif' => !$service->actif]);
-        return back()->with('success', 'Statut du service mis à jour.');
+        return back()->with('success', 'Service status updated.');
     }
-    
+
 
 }

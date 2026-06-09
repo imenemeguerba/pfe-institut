@@ -67,7 +67,7 @@ class ReservationController extends Controller
         $services   = Service::whereIn('id', $serviceIds)->where('actif', true)->get();
 
         if ($services->count() !== count($serviceIds)) {
-            return response()->json(['error' => 'Service invalide'], 404);
+            return response()->json(['error' => 'Invalid service'], 404);
         }
 
         $dureeTotale = $services->sum('duree');
@@ -97,7 +97,7 @@ class ReservationController extends Controller
         if (empty($groupes)) {
             return response()->json([
                 'mode'  => 'impossible',
-                'error' => 'Certains services n\'ont aucune esthéticienne disponible.',
+                'error' => 'Some services have no available expert.',
             ]);
         }
 
@@ -184,14 +184,14 @@ class ReservationController extends Controller
         $services   = Service::whereIn('id', $serviceIds)->where('actif', true)->get();
 
         if ($services->count() !== count($serviceIds)) {
-            return response()->json(['error' => 'Service invalide'], 404);
+            return response()->json(['error' => 'Invalid service'], 404);
         }
 
         if ($mode === 'split') {
             $splitGroupes = $request->input('split_groupes', []);
 
             if (empty($splitGroupes)) {
-                return response()->json(['error' => 'Groupes manquants'], 422);
+                return response()->json(['error' => 'Missing groups'], 422);
             }
 
             $groupesData = [];
@@ -228,7 +228,7 @@ class ReservationController extends Controller
         if ($estheticienneId) {
             $estheticienne = User::find($estheticienneId);
             if (!$estheticienne || !$estheticienne->isEstheticienne() || !$estheticienne->estActif()) {
-                return response()->json(['error' => 'Esthéticienne invalide'], 404);
+                return response()->json(['error' => 'Invalid expert'], 404);
             }
             $esthes = collect([$estheticienne]);
         } else {

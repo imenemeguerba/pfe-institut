@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email'    => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ];
     }
@@ -28,56 +29,49 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        // ✅ FIX: check account status BEFORE Auth::attempt()
+        // withoutGlobalScopes() bypasses any active-only scope on User model
+        $user = User::withoutGlobalScopes()
+            ->where('email', $this->string('email'))
+            ->first();
+
+        if ($user) {
+            if ($user->statut_compte === 'supprime') {
+                RateLimiter::hit($this->throttleKey());
+                throw ValidationException::withMessages([
+                    'email' => 'This account no longer exists.',
+                ]);
+            }
+
+            if ($user->statut_compte === 'en_attente_validation') {
+                RateLimiter::hit($this->throttleKey());
+                throw ValidationException::withMessages([
+                    'email' => 'Your account is pending validation by the administrator. You will be notified once it is activated.',
+                ]);
+            }
+
+            if ($user->statut_compte === 'desactive') {
+                $motif = $user->motif_statut ? ' Reason: ' . $user->motif_statut : '';
+                RateLimiter::hit($this->throttleKey());
+                throw ValidationException::withMessages([
+                    'email' => 'Your account has been deactivated.' . $motif,
+                ]);
+            }
+
+            if ($user->statut_compte === 'bloque') {
+                $motif = $user->motif_statut ? ' Reason: ' . $user->motif_statut : '';
+                RateLimiter::hit($this->throttleKey());
+                throw ValidationException::withMessages([
+                    'email' => 'Your account has been blocked.' . $motif,
+                ]);
+            }
+        }
+
+        // ✅ FIX: hardcoded English instead of __('auth.failed') which uses app locale
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        $user = Auth::user();
-
-        // Compte supprimé → message clair, pas de divulgation détaillée
-        if ($user->statut_compte === 'supprime') {
-            Auth::logout();
-            $this->session()->invalidate();
-            $this->session()->regenerateToken();
-
-            throw ValidationException::withMessages([
-                'email' => 'Ce compte n\'existe plus.',
-            ]);
-        }
-
-        if ($user->statut_compte === 'en_attente_validation') {
-            Auth::logout();
-            $this->session()->invalidate();
-            $this->session()->regenerateToken();
-
-            throw ValidationException::withMessages([
-                'email' => 'Votre compte est en attente de validation par l\'administrateur. Vous serez notifiée dès qu\'il sera activé.',
-            ]);
-        }
-
-        if ($user->statut_compte === 'desactive') {
-            $motif = $user->motif_statut ? ' Motif : ' . $user->motif_statut : '';
-            Auth::logout();
-            $this->session()->invalidate();
-            $this->session()->regenerateToken();
-
-            throw ValidationException::withMessages([
-                'email' => 'Votre compte a été désactivé.' . $motif,
-            ]);
-        }
-
-        if ($user->statut_compte === 'bloque') {
-            $motif = $user->motif_statut ? ' Motif : ' . $user->motif_statut : '';
-            Auth::logout();
-            $this->session()->invalidate();
-            $this->session()->regenerateToken();
-
-            throw ValidationException::withMessages([
-                'email' => 'Votre compte a été bloqué.' . $motif,
+                'email' => 'These credentials do not match our records.',
             ]);
         }
 
@@ -95,10 +89,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => 'Too many login attempts. Please try again in ' . ceil($seconds / 60) . ' minute(s).',
         ]);
     }
 

@@ -229,6 +229,6 @@ class StatistiqueController extends Controller
             } catch (\Exception $e) { continue; }
         }
 
-        return back()->with('success', "Notification envoyee a {$clients->count()} client(s) !");
+        return back()->with('success', "Notification sent to {$clients->count()} client(s)!");
     }
 }

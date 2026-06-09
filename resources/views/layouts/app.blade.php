@@ -15,105 +15,38 @@
     @auth
     @if(Auth::user()->isClient())
     <style>
-    /* CLIENT NAVBAR */
-    .navbar {
-        position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-        background: white;
-        box-shadow: 0 2px 16px rgba(180,128,255,0.08);
-    }
-    .client-page-content {
-        min-height: calc(100vh - 70px);
-        background: #f8f5ff;
-        padding: 32px 24px;
-        overflow-x: hidden;
-        padding-top: calc(70px + 32px);
-    }
-    /* NAV ICON BTNS */
-    .nav-icon-btn {
-        position: relative; display: inline-flex;
-        align-items: center; justify-content: center;
-        width: 38px; height: 38px; border-radius: 50%;
-        background: rgba(180,128,255,0.08); color: #b480ff;
-        font-size: 16px; text-decoration: none;
-        transition: all 0.2s; border: 1.5px solid rgba(180,128,255,0.15);
-    }
-    .nav-icon-btn:hover { background: rgba(180,128,255,0.18); transform: translateY(-1px); }
-    .nav-icon-badge {
-        position: absolute; top: -4px; right: -4px;
-        min-width: 17px; height: 17px; border-radius: 20px;
-        background: #b480ff; color: white; font-size: 9px; font-weight: 800;
-        display: flex; align-items: center; justify-content: center;
-        padding: 0 4px; border: 2px solid white;
-    }
-    .nav-icon-badge.fav  { background: #ec4899; }
-    .nav-icon-badge.cart { background: #d3aa95; }
-    /* AVATAR DROPDOWN */
-    .nav-avatar-wrap {
-        display: flex; align-items: center; gap: 8px; cursor: pointer;
-        padding: 6px 12px; border-radius: 30px;
-        border: 1.5px solid rgba(180,128,255,0.2);
-        background: rgba(180,128,255,0.05);
-        transition: all 0.2s; position: relative; user-select: none;
-    }
-    .nav-avatar-wrap:hover { border-color: #b480ff; background: rgba(180,128,255,0.1); }
-    .nav-avatar-img  { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
-    .nav-avatar-init {
-        width: 30px; height: 30px; border-radius: 50%;
-        background: linear-gradient(135deg, #b480ff, #d3aa95);
-        color: white; font-size: 13px; font-weight: 700;
-        display: flex; align-items: center; justify-content: center;
-    }
-    .nav-avatar-name  { font-size: 13px; font-weight: 600; color: #1a1a2e; }
-    .nav-avatar-arrow { font-size: 10px; color: #b480ff; transition: transform 0.2s; }
-    .nav-avatar-arrow.open { transform: rotate(180deg); }
-    .nav-dropdown {
-        position: absolute; top: 58px; right: 0;
-        width: 240px; background: white;
-        border-radius: 16px; border: 1px solid #ede9fe;
-        box-shadow: 0 12px 40px rgba(180,128,255,0.15);
-        display: none; z-index: 999; overflow: hidden;
-    }
-    .nav-dropdown.open { display: block; animation: dropIn 0.2s ease; }
-    @keyframes dropIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-    .nav-dropdown-header {
-        padding: 14px 16px;
-        background: linear-gradient(135deg, rgba(180,128,255,0.08), rgba(211,170,149,0.06));
-        border-bottom: 1px solid #ede9fe;
-    }
-    .nav-dropdown-name  { font-size: 13px; font-weight: 700; color: #1a1a2e; }
-    .nav-dropdown-email { font-size: 11px; color: #9ca3af; margin-top: 2px; }
-    .nav-dropdown-body  { padding: 8px 0; }
-    .nav-dropdown-item  {
-        display: flex; align-items: center; gap: 10px;
-        padding: 10px 16px; font-size: 13px; color: #374151;
-        text-decoration: none; transition: background 0.15s; font-weight: 500;
-    }
-    .nav-dropdown-item i { color: #b480ff; width: 16px; text-align: center; }
-    .nav-dropdown-item:hover { background: #fdf9ff; color: #b480ff; }
-    .nav-dropdown-footer { padding: 8px 0; border-top: 1px solid #ede9fe; }
-    .nav-dropdown-logout {
-        display: flex; align-items: center; gap: 10px; width: 100%;
-        padding: 10px 16px; font-size: 13px; color: #ef4444; font-weight: 500;
-        background: none; border: none; cursor: pointer;
-        font-family: inherit; transition: background 0.15s;
-    }
-    .nav-dropdown-logout:hover { background: #fff5f5; }
-    /* NAV LINKS */
-    .nav-links { display: flex; list-style: none; gap: 28px; align-items: center; }
-    .nav-links li a { font-size: 16px; font-weight: 500; color: #374151; text-decoration: none; transition: color 0.2s; }
-    .nav-links li a:hover { color: #b480ff; }
-    /* ✅ CLIENT NOTIFICATION DROPDOWN */
-    .client-notif-drop {
-        position:absolute; top:48px; right:0; width:320px;
-        background:white; border-radius:18px; border:1px solid #ede9fe;
-        box-shadow:0 16px 48px rgba(180,128,255,0.18);
-        z-index:9999; overflow:hidden;
-    }
-    .client-notif-head {
-        display:flex; align-items:center; justify-content:space-between;
-        padding:14px 16px; border-bottom:1px solid #f5f0ff;
-        background:linear-gradient(135deg,rgba(180,128,255,0.06),rgba(211,170,149,0.04));
-    }
+    .navbar { position:fixed; top:0; left:0; right:0; z-index:100; background:white; box-shadow:0 2px 16px rgba(180,128,255,0.08); }
+    .client-page-content { min-height:calc(100vh - 70px); background:#f8f5ff; padding:32px 24px; overflow-x:hidden; padding-top:calc(70px + 32px); }
+    .nav-icon-btn { position:relative; display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:rgba(180,128,255,0.08); color:#b480ff; font-size:16px; text-decoration:none; transition:all 0.2s; border:1.5px solid rgba(180,128,255,0.15); }
+    .nav-icon-btn:hover { background:rgba(180,128,255,0.18); transform:translateY(-1px); }
+    .nav-icon-badge { position:absolute; top:-4px; right:-4px; min-width:17px; height:17px; border-radius:20px; background:#b480ff; color:white; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; padding:0 4px; border:2px solid white; }
+    .nav-icon-badge.fav  { background:#ec4899; }
+    .nav-icon-badge.cart { background:#d3aa95; }
+    .nav-avatar-wrap { display:flex; align-items:center; gap:8px; cursor:pointer; padding:6px 12px; border-radius:30px; border:1.5px solid rgba(180,128,255,0.2); background:rgba(180,128,255,0.05); transition:all 0.2s; position:relative; user-select:none; }
+    .nav-avatar-wrap:hover { border-color:#b480ff; background:rgba(180,128,255,0.1); }
+    .nav-avatar-img  { width:30px; height:30px; border-radius:50%; object-fit:cover; }
+    .nav-avatar-init { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#b480ff,#d3aa95); color:white; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+    .nav-avatar-name  { font-size:13px; font-weight:600; color:#1a1a2e; }
+    .nav-avatar-arrow { font-size:10px; color:#b480ff; transition:transform 0.2s; }
+    .nav-avatar-arrow.open { transform:rotate(180deg); }
+    .nav-dropdown { position:absolute; top:58px; right:0; width:240px; background:white; border-radius:16px; border:1px solid #ede9fe; box-shadow:0 12px 40px rgba(180,128,255,0.15); display:none; z-index:999; overflow:hidden; }
+    .nav-dropdown.open { display:block; animation:dropIn 0.2s ease; }
+    @keyframes dropIn { from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);} }
+    .nav-dropdown-header { padding:14px 16px; background:linear-gradient(135deg,rgba(180,128,255,0.08),rgba(211,170,149,0.06)); border-bottom:1px solid #ede9fe; }
+    .nav-dropdown-name  { font-size:13px; font-weight:700; color:#1a1a2e; }
+    .nav-dropdown-email { font-size:11px; color:#9ca3af; margin-top:2px; }
+    .nav-dropdown-body  { padding:8px 0; }
+    .nav-dropdown-item  { display:flex; align-items:center; gap:10px; padding:10px 16px; font-size:13px; color:#374151; text-decoration:none; transition:background 0.15s; font-weight:500; }
+    .nav-dropdown-item i { color:#b480ff; width:16px; text-align:center; }
+    .nav-dropdown-item:hover { background:#fdf9ff; color:#b480ff; }
+    .nav-dropdown-footer { padding:8px 0; border-top:1px solid #ede9fe; }
+    .nav-dropdown-logout { display:flex; align-items:center; gap:10px; width:100%; padding:10px 16px; font-size:13px; color:#ef4444; font-weight:500; background:none; border:none; cursor:pointer; font-family:inherit; transition:background 0.15s; }
+    .nav-dropdown-logout:hover { background:#fff5f5; }
+    .nav-links { display:flex; list-style:none; gap:28px; align-items:center; }
+    .nav-links li a { font-size:16px; font-weight:500; color:#374151; text-decoration:none; transition:color 0.2s; }
+    .nav-links li a:hover { color:#b480ff; }
+    .client-notif-drop { position:absolute; top:48px; right:0; width:320px; background:white; border-radius:18px; border:1px solid #ede9fe; box-shadow:0 16px 48px rgba(180,128,255,0.18); z-index:9999; overflow:hidden; }
+    .client-notif-head { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid #f5f0ff; background:linear-gradient(135deg,rgba(180,128,255,0.06),rgba(211,170,149,0.04)); }
     .client-notif-title { font-size:13px; font-weight:800; color:#1a1a2e; display:flex; align-items:center; gap:6px; }
     .client-notif-mark-all { font-size:11px; font-weight:600; color:#b480ff; background:none; border:1.5px solid rgba(180,128,255,0.25); border-radius:20px; padding:4px 10px; cursor:pointer; font-family:inherit; transition:all 0.2s; }
     .client-notif-mark-all:hover { background:#b480ff; color:white; border-color:#b480ff; }
@@ -127,14 +60,19 @@
     .client-notif-check { width:26px; height:26px; border-radius:50%; background:rgba(180,128,255,0.08); border:1.5px solid rgba(180,128,255,0.2); color:#b480ff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:10px; transition:all 0.2s; font-family:inherit; flex-shrink:0; }
     .client-notif-check:hover { background:#b480ff; color:white; border-color:#b480ff; }
     .client-notif-empty { text-align:center; padding:32px 16px; font-size:12px; color:#c4b5fd; }
-    /* ✅ GLOBAL CONFIRM MODAL */
+    </style>
+    @endif
+    @endauth
+
+    {{-- ✅ GLOBAL CONFIRM MODAL CSS — all roles --}}
+    <style>
     #glow-overlay { display:none; position:fixed; inset:0; background:rgba(26,10,53,0.5); z-index:99999; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
     #glow-overlay.open { display:flex; }
     #glow-box { background:white; border-radius:22px; padding:32px 28px; max-width:380px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(180,128,255,0.2); animation:glowBoxIn 0.25s ease; }
-    @keyframes glowBoxIn { from{opacity:0;transform:scale(0.9) translateY(-10px);} to{opacity:1;transform:scale(1) translateY(0);} }
+    @keyframes glowBoxIn { from{opacity:0;transform:scale(0.9) translateY(-10px);}to{opacity:1;transform:scale(1) translateY(0);} }
     #glow-box .gc-icon { width:54px; height:54px; border-radius:50%; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-size:22px; }
-    #glow-box .gc-icon.red    { background:rgba(239,68,68,0.1); color:#ef4444; }
-    #glow-box .gc-icon.orange { background:rgba(249,115,22,0.1); color:#f97316; }
+    #glow-box .gc-icon.red    { background:rgba(239,68,68,0.1);   color:#ef4444; }
+    #glow-box .gc-icon.orange { background:rgba(249,115,22,0.1);  color:#f97316; }
     #glow-box .gc-icon.purple { background:rgba(180,128,255,0.1); color:#b480ff; }
     #glow-box .gc-icon.green  { background:rgba(16,185,129,0.1);  color:#059669; }
     #glow-box h3 { font-size:17px; font-weight:800; color:#1a1a2e; margin-bottom:8px; }
@@ -143,15 +81,7 @@
     #glow-box .gc-cancel  { padding:10px 22px; border-radius:30px; border:1.5px solid #ede9fe; background:white; color:#6b7280; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; }
     #glow-box .gc-cancel:hover { border-color:#b480ff; color:#b480ff; }
     #glow-box .gc-confirm { padding:10px 22px; border-radius:30px; border:none; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; color:white; transition:all 0.2s; }
-    #glow-box .gc-confirm.red    { background:#ef4444; }
-    #glow-box .gc-confirm.red:hover    { background:#dc2626; }
-    #glow-box .gc-confirm.orange { background:#f97316; }
-    #glow-box .gc-confirm.orange:hover { background:#ea580c; }
-    #glow-box .gc-confirm.purple { background:linear-gradient(to right,#b480ff,#d3aa95); }
-    #glow-box .gc-confirm.purple:hover { opacity:0.9; }
     </style>
-    @endif
-    @endauth
 </head>
 <body x-data="{}">
 
@@ -183,20 +113,14 @@
         </ul>
 
         <div class="right-section">
-            {{-- ✅ NOTIFICATIONS avec dropdown --}}
             <div style="position:relative;" x-data="{ open: false }">
-                <button class="nav-icon-btn" @click="open = !open" title="Notifications"
-                        style="border:none; cursor:pointer; font-family:inherit;">
+                <button class="nav-icon-btn" @click="open = !open" title="Notifications" style="border:none;cursor:pointer;font-family:inherit;">
                     <i class="fa-solid fa-bell"></i>
-                    @if($nbNotifs > 0)
-                        <span class="nav-icon-badge">{{ $nbNotifs > 9 ? '9+' : $nbNotifs }}</span>
-                    @endif
+                    @if($nbNotifs > 0)<span class="nav-icon-badge">{{ $nbNotifs > 9 ? '9+' : $nbNotifs }}</span>@endif
                 </button>
                 <div x-show="open" @click.outside="open = false" x-transition class="client-notif-drop" style="display:none;">
                     <div class="client-notif-head">
-                        <span class="client-notif-title">
-                            <i class="fa-solid fa-bell" style="font-size:11px;"></i> Notifications
-                        </span>
+                        <span class="client-notif-title"><i class="fa-solid fa-bell" style="font-size:11px;"></i> Notifications</span>
                         @if($nbNotifs > 0)
                             <form method="POST" action="{{ route('notifications.marquer-lues') }}" style="display:inline;">
                                 @csrf
@@ -215,9 +139,7 @@
                                 </div>
                                 <form method="POST" action="{{ route('notifications.marquer-lue', $n->id) }}" style="flex-shrink:0;">
                                     @csrf
-                                    <button type="submit" class="client-notif-check" title="Mark as read">
-                                        <i class="fa-solid fa-check"></i>
-                                    </button>
+                                    <button type="submit" class="client-notif-check" title="Mark as read"><i class="fa-solid fa-check"></i></button>
                                 </form>
                             </div>
                         @empty
@@ -230,18 +152,15 @@
                 </div>
             </div>
 
-            {{-- FAVORIS --}}
             <a href="{{ route('client.favoris.index') }}" class="nav-icon-btn" title="Favorites">
                 <i class="fa-regular fa-heart"></i>
                 @if($nbFavoris > 0)<span class="nav-icon-badge fav">{{ $nbFavoris }}</span>@endif
             </a>
-            {{-- PANIER --}}
             <a href="{{ route('client.panier.index') }}" class="nav-icon-btn" title="Cart">
                 <i class="fa-solid fa-cart-shopping"></i>
                 @if($nbPanier > 0)<span class="nav-icon-badge cart">{{ $nbPanier }}</span>@endif
             </a>
 
-            {{-- AVATAR DROPDOWN --}}
             <div style="position:relative;">
                 <div class="nav-avatar-wrap" onclick="toggleClientMenu()" id="clientAvatarBtn">
                     @if(Auth::user()->photo)
@@ -252,7 +171,6 @@
                     <span class="nav-avatar-name">{{ Auth::user()->prenom }}</span>
                     <i class="fa-solid fa-chevron-down nav-avatar-arrow" id="clientAvatarArrow"></i>
                 </div>
-
                 <div class="nav-dropdown" id="clientUserDropdown">
                     <div class="nav-dropdown-header">
                         <p class="nav-dropdown-name">{{ Auth::user()->fullName() }}</p>
@@ -278,35 +196,17 @@
                     <div class="nav-dropdown-footer">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="nav-dropdown-logout">
-                                <i class="fa-solid fa-right-from-bracket"></i> Logout
-                            </button>
+                            <button type="submit" class="nav-dropdown-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <div class="hamburger" onclick="toggleClientNav()">
-                <i class="fa-solid fa-bars"></i>
-            </div>
+            <div class="hamburger" onclick="toggleClientNav()"><i class="fa-solid fa-bars"></i></div>
         </div>
     </nav>
 
-    <div class="client-page-content">
-        {{ $slot }}
-    </div>
-    {{-- ✅ GLOBAL CONFIRM MODAL --}}
-    <div id="glow-overlay">
-        <div id="glow-box">
-            <div class="gc-icon red" id="gc-icon"><i class="fa-solid fa-triangle-exclamation" id="gc-icon-i"></i></div>
-            <h3 id="gc-title">Are you sure?</h3>
-            <p  id="gc-msg">This action cannot be undone.</p>
-            <div class="gc-actions">
-                <button class="gc-cancel" onclick="glowModalClose()">Cancel</button>
-                <button class="gc-confirm red" id="gc-btn" onclick="glowModalConfirm()">Confirm</button>
-            </div>
-        </div>
-    </div>
+    <div class="client-page-content">{{ $slot }}</div>
 
 @else
 
@@ -316,12 +216,10 @@
             <a href="{{ route('dashboard') }}" class="sb-logo">
                 <div class="sb-logo-text">
                     <div class="sb-logo-name">Glow Institute</div>
-                    <div class="sb-logo-sub">Beauty & Wellness</div>
                 </div>
             </a>
 
             <nav class="sb-nav" id="sidebarNav">
-
                 @if(Auth::user()->role === 'admin')
                     <div class="sb-section">
                         <div class="sb-section-label">Overview</div>
@@ -331,7 +229,7 @@
                     </div>
                     @php
                         $sbOrders   = \App\Models\Commande::where('statut','en_attente')->count();
-                        $sbExperts  = \App\Models\User::where('role','estheticienne')->where('statut_compte','en_attente')->count();
+                        $sbExperts  = \App\Models\User::where('role','estheticienne')->where('statut_compte','en_attente_validation')->count();
                         $sbReviews  = \App\Models\Avis::where('statut','en_attente')->count();
                         $sbDel      = \App\Models\DemandeSuppression::where('statut','en_attente')->count();
                         $sbStock    = \App\Models\Produit::where('actif',true)->where('stock','<=',5)->count();
@@ -404,7 +302,6 @@
                         <a href="{{ route('estheticienne.contact.index') }}" class="sb-link {{ request()->routeIs('estheticienne.contact.*') ? 'active' : '' }}"><i class="fa-solid fa-envelope"></i> Contact</a>
                     </div>
                 @endif
-
             </nav>
 
             <div class="sb-footer">
@@ -495,95 +392,92 @@
                     </div>
                 </div>
             </div>
-            <div class="page-content" id="pageContent">
-                {{ $slot }}
-            </div>
-        </div>
-    </div>
-
-    {{-- ✅ GLOBAL CONFIRM MODAL — esthéticienne & admin --}}
-    <div id="glow-overlay" style="display:none;position:fixed;inset:0;background:rgba(26,10,53,0.5);z-index:99999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
-        <div id="glow-box" style="background:white;border-radius:22px;padding:32px 28px;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(180,128,255,0.2);animation:glowBoxIn 0.25s ease;">
-            <style>@keyframes glowBoxIn{from{opacity:0;transform:scale(0.9) translateY(-10px);}to{opacity:1;transform:scale(1) translateY(0);}}</style>
-            <div class="gc-icon red" id="gc-icon" style="width:54px;height:54px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(239,68,68,0.1);color:#ef4444;">
-                <i class="fa-solid fa-triangle-exclamation" id="gc-icon-i"></i>
-            </div>
-            <h3 id="gc-title" style="font-size:17px;font-weight:800;color:#1a1a2e;margin-bottom:8px;">Are you sure?</h3>
-            <p  id="gc-msg"   style="font-size:13px;color:#6b7280;margin-bottom:24px;line-height:1.6;">This action cannot be undone.</p>
-            <div style="display:flex;gap:10px;justify-content:center;">
-                <button class="gc-cancel"  onclick="glowModalClose()" style="padding:10px 22px;border-radius:30px;border:1.5px solid #ede9fe;background:white;color:#6b7280;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Cancel</button>
-                <button class="gc-confirm" id="gc-btn" onclick="glowModalConfirm()" style="padding:10px 22px;border-radius:30px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:white;background:#ef4444;">Confirm</button>
-            </div>
+            <div class="page-content" id="pageContent">{{ $slot }}</div>
         </div>
     </div>
 
 @endif
+
+{{-- ✅ GLOBAL CONFIRM MODAL — all roles --}}
+<div id="glow-overlay">
+    <div id="glow-box">
+        <div class="gc-icon red" id="gc-icon"><i class="fa-solid fa-triangle-exclamation" id="gc-icon-i"></i></div>
+        <h3 id="gc-title">Are you sure?</h3>
+        <p  id="gc-msg">This action cannot be undone.</p>
+        <div class="gc-actions">
+            <button class="gc-cancel" onclick="glowModalClose()">Cancel</button>
+            <button class="gc-confirm red" id="gc-btn" onclick="glowModalConfirm()">Confirm</button>
+        </div>
+    </div>
+</div>
+
 @else
     <div class="page-content">{{ $slot }}</div>
 @endauth
 
 <script>
-
-// ✅ GLOBAL CONFIRM MODAL
 var _glowCb = null;
 function glowConfirm(title, msg, btnText, iconType, btnColor, callback) {
-    iconType  = iconType  || 'fa-triangle-exclamation';
-    btnColor  = btnColor  || 'red';
+    iconType = iconType || 'fa-triangle-exclamation';
+    btnColor = btnColor || 'red';
     var iconCls = (btnColor === 'red' || btnColor === 'orange' || btnColor === 'purple' || btnColor === 'green') ? btnColor : 'red';
-    document.getElementById('gc-icon').className    = 'gc-icon ' + iconCls;
-    document.getElementById('gc-icon-i').className  = 'fa-solid ' + iconType;
+    document.getElementById('gc-icon').className   = 'gc-icon ' + iconCls;
+    document.getElementById('gc-icon-i').className = 'fa-solid ' + iconType;
     document.getElementById('gc-title').textContent = title;
     document.getElementById('gc-msg').textContent   = msg;
     document.getElementById('gc-btn').textContent   = btnText;
-    // Apply button color
     var colors = { red:'#ef4444', orange:'#f97316', purple:'linear-gradient(to right,#b480ff,#d3aa95)', green:'#059669' };
     var btn = document.getElementById('gc-btn');
     btn.style.background = colors[btnColor] || btnColor || '#ef4444';
     btn.className = 'gc-confirm';
     _glowCb = callback;
-    var overlay = document.getElementById('glow-overlay');
-    if (overlay) { overlay.style.display = 'flex'; overlay.classList.add('open'); }
+    var ov = document.getElementById('glow-overlay');
+    if (ov) { ov.style.display = 'flex'; ov.classList.add('open'); }
 }
-function glowModalClose()   { document.getElementById('glow-overlay').classList.remove('open'); _glowCb = null; }
+function glowModalClose() {
+    var ov = document.getElementById('glow-overlay');
+    if (ov) { ov.classList.remove('open'); ov.style.display = 'none'; }
+    _glowCb = null;
+}
 function glowModalConfirm() { var cb = _glowCb; glowModalClose(); if (cb) cb(); }
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('glow-overlay').addEventListener('click', function(e) {
-        if (e.target === this) glowModalClose();
-    });
+    var ov = document.getElementById('glow-overlay');
+    if (ov) ov.addEventListener('click', function(e) { if (e.target === this) glowModalClose(); });
 });
 
 function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const main    = document.getElementById('mainArea');
+    var sidebar = document.getElementById('sidebar');
+    var main    = document.getElementById('mainArea');
     if (!sidebar) return;
-    const isOpen = !sidebar.classList.contains('collapsed');
+    var isOpen = !sidebar.classList.contains('collapsed');
     sidebar.classList.toggle('collapsed');
-    main.style.marginLeft = isOpen ? '0' : '248px';
+    if (main) main.style.marginLeft = isOpen ? '0' : '248px';
 }
-const sidebar = document.getElementById('sidebar');
-const SCROLL_KEY = 'sb_scroll';
-const saved = sessionStorage.getItem(SCROLL_KEY);
+var sidebar = document.getElementById('sidebar');
+var SCROLL_KEY = 'sb_scroll';
+var saved = sessionStorage.getItem(SCROLL_KEY);
 if (saved && sidebar) sidebar.scrollTop = parseInt(saved);
-if (sidebar) sidebar.addEventListener('scroll', () => sessionStorage.setItem(SCROLL_KEY, sidebar.scrollTop));
+if (sidebar) sidebar.addEventListener('scroll', function() { sessionStorage.setItem(SCROLL_KEY, sidebar.scrollTop); });
 
 function toggleClientMenu() {
-    const dropdown = document.getElementById('clientUserDropdown');
-    const arrow    = document.getElementById('clientAvatarArrow');
+    var dropdown = document.getElementById('clientUserDropdown');
+    var arrow    = document.getElementById('clientAvatarArrow');
     if (!dropdown) return;
     dropdown.classList.toggle('open');
-    arrow.classList.toggle('open');
+    if (arrow) arrow.classList.toggle('open');
 }
 document.addEventListener('click', function(e) {
-    const btn      = document.getElementById('clientAvatarBtn');
-    const dropdown = document.getElementById('clientUserDropdown');
+    var btn      = document.getElementById('clientAvatarBtn');
+    var dropdown = document.getElementById('clientUserDropdown');
     if (btn && !btn.contains(e.target) && dropdown) {
         dropdown.classList.remove('open');
-        const arrow = document.getElementById('clientAvatarArrow');
+        var arrow = document.getElementById('clientAvatarArrow');
         if (arrow) arrow.classList.remove('open');
     }
 });
 function toggleClientNav() {
-    document.getElementById('navLinksClient')?.classList.toggle('open');
+    var nav = document.getElementById('navLinksClient');
+    if (nav) nav.classList.toggle('open');
 }
 </script>
 </body>

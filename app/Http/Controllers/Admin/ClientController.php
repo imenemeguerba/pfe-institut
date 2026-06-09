@@ -75,7 +75,7 @@ class ClientController extends Controller
     public function bloquer(Request $request, User $client): RedirectResponse
     {
         if (!$client->isClient() || !$client->estActif()) {
-            return back()->with('error', 'Ce client n\'est pas actif.');
+            return back()->with('error', 'This client account is not active.');
         }
 
         $request->validate([
@@ -83,12 +83,11 @@ class ClientController extends Controller
         ]);
 
         $client->update([
-            'statut_compte' => 'bloque',
-            'motif_statut'  => $request->input('motif'),
-            'email_libre_le' => '9999-12-31 23:59:59',
+            'statut_compte'  => 'bloque',
+            'motif_statut'   => $request->input('motif'),
+            'email_libre_le' => null, // ✅ Not a permanent ban — can be unblocked
         ]);
 
-        // ── Email notification ──────────────────────────────────────────
         try {
             Mail::to($client->email)->send(new CompteActionClient(
                 prenom: $client->prenom,
@@ -100,13 +99,13 @@ class ClientController extends Controller
         }
 
         return redirect()->route('admin.clients.show', $client)
-            ->with('success', 'Le client ' . $client->fullName() . ' a été bloqué.');
+            ->with('success', $client->fullName() . ' has been blocked.');
     }
 
     public function debloquer(User $client): RedirectResponse
     {
         if (!$client->isClient() || !$client->estBloque()) {
-            return back()->with('error', 'Ce client n\'est pas bloqué.');
+            return back()->with('error', 'This client account is not blocked.');
         }
 
         $client->update([
@@ -115,8 +114,18 @@ class ClientController extends Controller
             'email_libre_le' => null,
         ]);
 
+        // ✅ Email notification added
+        try {
+            Mail::to($client->email)->send(new CompteActionClient(
+                prenom: $client->prenom,
+                action: 'reactive',
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Email debloquer client: ' . $e->getMessage());
+        }
+
         return redirect()->route('admin.clients.show', $client)
-            ->with('success', 'Le client ' . $client->fullName() . ' a été débloqué.');
+            ->with('success', $client->fullName() . ' has been unblocked.');
     }
 
     public function destroy(User $client): RedirectResponse
@@ -130,15 +139,14 @@ class ClientController extends Controller
 
         if ($rdvFuturs > 0) {
             return back()->with('error',
-                'Impossible : ' . $client->fullName() . ' a ' . $rdvFuturs . ' rendez-vous à venir.'
+                'Cannot delete: ' . $client->fullName() . ' has ' . $rdvFuturs . ' upcoming appointment(s).'
             );
         }
 
-        $nom   = $client->fullName();
-        $email = $client->email;
+        $nom    = $client->fullName();
+        $email  = $client->email;
         $prenom = $client->prenom;
 
-        // ── Email notification avant suppression ────────────────────────
         try {
             Mail::to($email)->send(new CompteActionClient(
                 prenom: $prenom,
@@ -150,11 +158,11 @@ class ClientController extends Controller
 
         $client->update([
             'statut_compte'  => 'supprime',
-            'motif_statut'   => 'Compte supprimé par l\'administrateur',
+            'motif_statut'   => 'Account deleted by administrator',
             'email_libre_le' => '9999-12-31 23:59:59',
         ]);
 
         return redirect()->route('admin.clients.index')
-            ->with('success', 'Le compte de ' . $nom . ' a été supprimé.');
+            ->with('success', 'The account of ' . $nom . ' has been deleted.');
     }
 }

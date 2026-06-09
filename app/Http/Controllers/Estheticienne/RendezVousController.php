@@ -51,8 +51,12 @@ class RendezVousController extends Controller
         if ($rendezVous->estheticienne_id !== $request->user()->id) abort(403);
 
         if ($rendezVous->statut !== 'en_attente') {
-            return back()->with('error', 'This appointment can no longer be confirmed.');
-        }
+    return back()->with('error', 'This appointment can no longer be confirmed.');
+}
+
+if ($rendezVous->date_debut->isPast()) {
+    return back()->with('error', 'Cannot confirm a past appointment.');
+}
 
         $rendezVous->update(['statut' => 'confirme']);
 

@@ -50,7 +50,7 @@ body { font-family:"Segoe UI",Arial,sans-serif; background:#f3eeff; color:#1e293
         </div>
         <div class="warning"><p>⚠️ If you did not request this, please ignore this email. Never share this code with anyone.</p></div>
         <div class="divider"></div>
-        <p style="font-size:12px;color:#94a3b8;text-align:center;">Having trouble? Contact us at <a href="mailto:contact@glowinstitute.dz" style="color:#b480ff;text-decoration:none;">contact@glowinstitute.dz</a></p>
+        <p style="font-size:12px;color:#94a3b8;text-align:center;">Having trouble? Contact us at <a href="mailto:glowinstitute.app@gmail.com" style="color:#b480ff;text-decoration:none;">glowinstitute.app@gmail.com</a></p>
     </div>
     <div class="footer">
         <p>This email was sent automatically by <strong>Glow Institute</strong>.<br>Please do not reply to this email directly.</p>

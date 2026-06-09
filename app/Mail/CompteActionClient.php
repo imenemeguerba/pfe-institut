@@ -20,9 +20,13 @@ class CompteActionClient extends Mailable
 
     public function envelope(): Envelope
     {
-        $sujet = $this->action === 'supprime'
-            ? '🗑️ Your Glow Institute account has been deleted'
-            : '🔒 Your Glow Institute account has been suspended';
+        $sujet = match($this->action) {
+            'supprime' => '🗑️ Your Glow Institute account has been deleted',
+            'bloque'   => '🔒 Your Glow Institute account has been blocked',
+            'reactive' => '✅ Your Glow Institute account has been reactivated',
+            default    => '📋 Update about your Glow Institute account',
+        };
+
         return new Envelope(subject: $sujet);
     }
 

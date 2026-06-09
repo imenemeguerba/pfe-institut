@@ -64,7 +64,7 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:#faf8ff; }
 @keyframes cardIn { from{opacity:0;transform:translateY(24px) scale(0.96);} to{opacity:1;transform:translateY(0) scale(1);} }
 .sh-card:hover { transform:translateY(-8px) scale(1.01); box-shadow:0 20px 50px rgba(180,128,255,0.15); border-color:#c4b5fd; }
 
-.sh-card-img { position:relative; height:200px; overflow:hidden; }
+.sh-card-img { position:relative; height:260px; overflow:hidden; }
 .sh-card-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
 .sh-card:hover .sh-card-img img { transform:scale(1.08); }
 .sh-card-img-ph { width:100%; height:100%; background:linear-gradient(135deg,rgba(180,128,255,0.1),rgba(211,170,149,0.1)); display:flex; align-items:center; justify-content:center; }

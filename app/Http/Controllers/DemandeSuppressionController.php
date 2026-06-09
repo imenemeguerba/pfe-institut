@@ -21,7 +21,7 @@ class DemandeSuppressionController extends Controller
             ->first();
 
         if ($demandeExistante) {
-            return back()->with('error', 'Vous avez déjà une demande de suppression en attente de traitement par l\'administrateur.');
+            return back()->with('error', 'You already have a pending deletion request awaiting administrator review.');
         }
 
         // Validation du motif (optionnel)
@@ -36,7 +36,7 @@ class DemandeSuppressionController extends Controller
             'motif_demande' => $request->input('motif_demande'),
         ]);
 
-        return back()->with('success', 'Votre demande de suppression a été envoyée à l\'administrateur. Vous serez notifié dès qu\'elle sera traitée.');
+        return back()->with('success', 'Your deletion request has been sent to the administrator. You will be notified once it is processed.');
     }
 
     /**
@@ -51,11 +51,11 @@ class DemandeSuppressionController extends Controller
 
         // Vérifier que la demande est encore en attente
         if (!$demande->estEnAttente()) {
-            return back()->with('error', 'Cette demande a déjà été traitée et ne peut plus être annulée.');
+            return back()->with('error', 'This request has already been processed and can no longer be cancelled.');
         }
 
         $demande->delete();
 
-        return back()->with('success', 'Votre demande de suppression a été annulée.');
+        return back()->with('success', 'Your deletion request has been cancelled.');
     }
 }

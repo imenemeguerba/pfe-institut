@@ -13,7 +13,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Plus Jakarta Sans'
 /* ══ 1. PHOTO FULL SCREEN ══════════════════════════════════════════ */
 .wl-photo{
   position:fixed;inset:0;z-index:0;
-  background-image: url('{{ asset("images/gp.png") }}');
+  background-image: url('{{ asset("images/welcome2.png") }}');
   background-size:cover;
   background-position:center top;
   /* subtle Ken Burns animation */

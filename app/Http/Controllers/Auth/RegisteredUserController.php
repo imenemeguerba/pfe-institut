@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -14,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -28,7 +28,8 @@ class RegisteredUserController extends Controller
     // ── Étape 2 : Valider + envoyer OTP ──────────────────────────────────
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        // ✅ FIX: utiliser Validator::make pour contrôler la redirection
+        $validator = Validator::make($request->all(), [
             'nom'            => ['required', 'string', 'max:100'],
             'prenom'         => ['required', 'string', 'max:100'],
             'date_naissance' => ['required', 'date', 'before:' . now()->subYears(18)->format('Y-m-d')],
@@ -41,11 +42,18 @@ class RegisteredUserController extends Controller
             'date_naissance.required' => 'La date de naissance est obligatoire.',
             'date_naissance.before'   => 'Vous devez avoir au moins 18 ans.',
             'telephone.required'      => 'Le téléphone est obligatoire.',
-            'email.required'          => 'L\'email est obligatoire.',
-            'email.email'             => 'L\'email doit être valide.',
+            'email.required'          => "L'email est obligatoire.",
+            'email.email'             => "L'email doit être valide.",
             'password.required'       => 'Le mot de passe est obligatoire.',
             'password.confirmed'      => 'Les mots de passe ne correspondent pas.',
         ]);
+
+        // ✅ FIX: toujours rediriger vers route('register') — jamais back()
+        if ($validator->fails()) {
+            return redirect()->route('register')
+                ->withErrors($validator)
+                ->withInput($request->except(['password', 'password_confirmation']));
+        }
 
         // Générer OTP 6 chiffres
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -114,14 +122,14 @@ class RegisteredUserController extends Controller
 
         // Créer le compte
         $user = User::create([
-            'nom'            => $data['nom'],
-            'prenom'         => $data['prenom'],
-            'date_naissance' => $data['date_naissance'],
-            'telephone'      => $data['telephone'],
-            'email'          => $data['email'],
-            'password'       => Hash::make($data['password']),
-            'role'           => 'client',
-            'statut_compte'  => 'actif',
+            'nom'               => $data['nom'],
+            'prenom'            => $data['prenom'],
+            'date_naissance'    => $data['date_naissance'],
+            'telephone'         => $data['telephone'],
+            'email'             => $data['email'],
+            'password'          => Hash::make($data['password']),
+            'role'              => 'client',
+            'statut_compte'     => 'actif',
             'email_verified_at' => now(),
         ]);
 

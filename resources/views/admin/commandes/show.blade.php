@@ -186,10 +186,10 @@
                 {{-- Cancel --}}
                 <form id="form-cancel" action="{{ route('admin.commandes.annuler', $commande) }}" method="POST" class="cancel-form">
                     @csrf @method('PATCH')
-                    <input type="text" name="motif_annulation" id="cancel-motif"
+                    <input type="text" name="motif_annulation"
                            placeholder="Cancellation reason (optional)" class="cancel-input">
                     <button type="button" class="btn-cancel-action"
-                        onclick="glowConfirm('Cancel Order','Are you sure you want to cancel this order?','Cancel','fa-xmark','#ef4444',function(){ document.getElementById('form-cancel').submit(); })">
+                        onclick="glowConfirm('Cancel Order','Are you sure you want to cancel this order?','Cancel','fa-xmark','red',function(){ document.getElementById('form-cancel').submit(); })">
                         <i class="fa-solid fa-xmark"></i> Cancel
                     </button>
                 </form>

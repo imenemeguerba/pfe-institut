@@ -133,7 +133,7 @@
                 <label>Status</label>
                 <select name="statut" class="f-input">
                     <option value="">All statuses</option>
-                    @foreach(['en_attente'=>'Pending','confirme'=>'Confirmed','termine'=>'Done','annule'=>'Cancelled','refuse'=>'Refused','reporte'=>'Rescheduled'] as $val => $label)
+                    @foreach(['en_attente'=>'Pending','confirme'=>'Confirmed','termine'=>'Done','annule'=>'Cancelled','refuse'=>'Refused'] as $val => $label)
                         <option value="{{ $val }}" {{ $statut === $val ? 'selected' : '' }}>{{ $label }}</option>
                     @endforeach
                 </select>
@@ -189,7 +189,7 @@
                                 <td><div class="rdv-price">{{ number_format($rdv->prix_final, 0, ',', ' ') }} DA</div></td>
                                 <td>
                                     <span class="rdv-status {{ $rdv->statut }}">
-                                        {{ ['en_attente'=>'Pending','confirme'=>'Confirmed','termine'=>'Done','annule'=>'Cancelled','refuse'=>'Refused','reporte'=>'Rescheduled'][$rdv->statut] ?? $rdv->statut }}
+                                        {{ ['en_attente'=>'Pending','confirme'=>'Confirmed','termine'=>'Done','annule'=>'Cancelled','refuse'=>'Refused'][$rdv->statut] ?? $rdv->statut }}
                                     </span>
                                 </td>
                                 <td><a href="{{ route('admin.rendez-vous.show', $rdv) }}" class="rdv-detail-link">View <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i></a></td>

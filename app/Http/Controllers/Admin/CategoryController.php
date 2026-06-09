@@ -53,7 +53,7 @@ class CategoryController extends Controller
 
         return redirect()
             ->route('admin.categories.index')
-            ->with('success', 'Catégorie créée avec succès.');
+            ->with('success', 'Category created successfully.');
     }
 
     /**
@@ -84,7 +84,7 @@ class CategoryController extends Controller
 
         return redirect()
             ->route('admin.categories.index')
-            ->with('success', 'Catégorie modifiée avec succès.');
+            ->with('success', 'Category updated successfully.');
     }
 
     /**
@@ -96,7 +96,7 @@ class CategoryController extends Controller
         if ($category->services()->count() > 0) {
             return redirect()
                 ->route('admin.categories.index')
-                ->with('error', 'Impossible de supprimer cette catégorie : elle contient des services. Désactivez-la plutôt.');
+                ->with('error', 'Cannot delete this category: it contains services. Deactivate it instead.');
         }
 
         // Supprimer l'image associée
@@ -108,7 +108,7 @@ class CategoryController extends Controller
 
         return redirect()
             ->route('admin.categories.index')
-            ->with('success', 'Catégorie supprimée avec succès.');
+            ->with('success', 'Category deleted successfully.');
     }
 
     /**
@@ -118,15 +118,15 @@ class CategoryController extends Controller
     {
         $category->update(['actif' => !$category->actif]);
 
-        $status = $category->actif ? 'activée' : 'désactivée';
+        $status = $category->actif ? 'activated' : 'deactivated';
 
         return redirect()
             ->route('admin.categories.index')
-            ->with('success', "Catégorie {$status} avec succès.");
+            ->with('success', "Category {$status} successfully.");
     }
     public function toggle(\App\Models\Category $category): \Illuminate\Http\RedirectResponse
     {
         $category->update(['actif' => !$category->actif]);
-        return back()->with('success', 'Statut de la catégorie mis à jour.');
+        return back()->with('success', 'Category status updated.');
     }
 }
