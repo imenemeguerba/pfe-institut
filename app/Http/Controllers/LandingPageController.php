@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Avis;
+use App\Models\CodePromo;
 use App\Models\Institut;
 use App\Models\Produit;
 use App\Models\Service;
@@ -45,6 +46,9 @@ class LandingPageController extends Controller
             ->where('statut_compte', 'actif')
             ->count();
 
+        // Codes promo actifs et valides (pour le banner)
+        $codesPromo = CodePromo::valides()->get();
+
 
 // Affluence
 $affluence = null;
@@ -53,15 +57,18 @@ if (auth()->check() && auth()->user()->isClient()) {
         ->whereIn('statut', ['confirme', 'en_cours'])
         ->count();
 
-    if ($rdvAujourdhui <= 3)      $affluence = ['niveau' => 'faible',  'message' => 'Great time to visit!'];
-    elseif ($rdvAujourdhui <= 7)  $affluence = ['niveau' => 'moyen',   'message' => 'Moderately busy today.'];
-    else                          $affluence = ['niveau' => 'eleve',   'message' => 'Very busy today, book in advance.'];
+    $seuilMoyen = $institut->seuil_affluence_moyen ?? 5;
+    $seuilEleve = $institut->seuil_affluence_eleve ?? 10;
+
+    if ($rdvAujourdhui < $seuilMoyen)      $affluence = ['niveau' => 'faible',  'message' => 'Great time to visit!'];
+    elseif ($rdvAujourdhui < $seuilEleve)  $affluence = ['niveau' => 'moyen',   'message' => 'Moderately busy today.'];
+    else                                   $affluence = ['niveau' => 'eleve',   'message' => 'Very busy today, book in advance.'];
 }
 
 
 
-       return view('landingpage', compact(
-    'institut', 'services', 'nbServices', 'produits', 'avis', 'noteMoyenne', 'nbEsthes', 'affluence'
+      return view('landingpage', compact(
+    'institut', 'services', 'nbServices', 'produits', 'avis', 'noteMoyenne', 'nbEsthes', 'affluence', 'codesPromo'
 ));
 
     }

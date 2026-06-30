@@ -177,20 +177,6 @@ Route::middleware(['auth', 'verified', 'admin'])
             ->name('messages-contact.repondre');
         Route::delete('/messages-contact/{messagesContact}', [\App\Http\Controllers\Admin\MessageContactController::class, 'destroy'])
             ->name('messages-contact.destroy');
-        Route::get('/conseils-beaute', [\App\Http\Controllers\Admin\ConseilBeauteController::class, 'index'])
-           ->name('conseils-beaute.index');
-        Route::get('/conseils-beaute/create', [\App\Http\Controllers\Admin\ConseilBeauteController::class, 'create'])
-           ->name('conseils-beaute.create');
-        Route::post('/conseils-beaute', [\App\Http\Controllers\Admin\ConseilBeauteController::class, 'store'])
-           ->name('conseils-beaute.store');
-        Route::get('/conseils-beaute/{conseilsBeaute}/edit', [\App\Http\Controllers\Admin\ConseilBeauteController::class, 'edit'])
-           ->name('conseils-beaute.edit');
-        Route::patch('/conseils-beaute/{conseilsBeaute}', [\App\Http\Controllers\Admin\ConseilBeauteController::class, 'update'])
-           ->name('conseils-beaute.update');
-        Route::patch('/conseils-beaute/{conseilsBeaute}/toggle', [\App\Http\Controllers\Admin\ConseilBeauteController::class, 'toggle'])
-          ->name('conseils-beaute.toggle');
-        Route::delete('/conseils-beaute/{conseilsBeaute}', [\App\Http\Controllers\Admin\ConseilBeauteController::class, 'destroy'])
-          ->name('conseils-beaute.destroy');
     });
 
 // ========================================================================

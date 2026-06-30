@@ -200,7 +200,11 @@
         <div class="esthe-block">
             <div class="esthe-header">
                 <div class="esthe-header-left">
-                    <div class="esthe-av">{{ strtoupper(substr($esthe->prenom,0,1)) }}</div>
+                    @if($esthe->photo)
+                        <img src="{{ asset('storage/'.$esthe->photo) }}" class="esthe-av" style="object-fit:cover;" alt="">
+                    @else
+                        <div class="esthe-av">{{ strtoupper(substr($esthe->prenom,0,1)) }}</div>
+                    @endif
                     <div>
                         <div class="esthe-name">{{ $esthe->fullName() }}</div>
                         @if($esthe->specialites)<div class="esthe-spec">{{ Str::limit($esthe->specialites, 60) }}</div>@endif

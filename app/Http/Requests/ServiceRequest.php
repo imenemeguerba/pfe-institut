@@ -26,7 +26,7 @@ class ServiceRequest extends FormRequest
             'category_id' => ['required', 'exists:categories,id'],
             'nom' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'prix' => ['required', 'integer', 'min:0'],
             'duree' => ['required', 'integer', 'min:5', 'max:480'],
             'actif' => ['nullable', 'boolean'],
@@ -53,7 +53,7 @@ class ServiceRequest extends FormRequest
         'duree.min'            => 'Minimum duration is 5 minutes.',
         'duree.max'            => 'Maximum duration is 8 hours (480 minutes).',
         'image.mimes'          => 'Image must be in JPG, PNG or WebP format.',
-        'image.max'            => 'Image must not exceed 5 MB.',
+        'image.max'            => 'Image must not exceed 10 MB.',
     ];
 }
 

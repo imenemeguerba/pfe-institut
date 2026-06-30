@@ -158,7 +158,11 @@
                     <div class="avis-top">
                         <div class="avis-left">
                             <div class="avis-meta">
-                                <div class="avis-av">{{ strtoupper(substr($av->client->prenom,0,1)) }}</div>
+                                @if($av->client->photo)
+                                    <img src="{{ asset('storage/'.$av->client->photo) }}" class="avis-av" style="object-fit:cover;" alt="">
+                                @else
+                                    <div class="avis-av">{{ strtoupper(substr($av->client->prenom,0,1)) }}</div>
+                                @endif
                                 <div>
                                     <div class="avis-client">{{ $av->client->fullName() }}</div>
                                     <div class="avis-date">{{ $av->created_at->format('d/m/Y H:i') }}</div>

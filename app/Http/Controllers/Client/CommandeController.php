@@ -118,7 +118,7 @@ class CommandeController extends Controller
         });
 
         return redirect()->route('client.commandes.index')
-            ->with('success', '✅ Commande passée ! Elle sera confirmée par notre équipe sous peu.');
+            ->with('success', '✅ Order placed! It will be confirmed by our team shortly.');
     }
 
     public function annuler(Request $request, Commande $commande): RedirectResponse

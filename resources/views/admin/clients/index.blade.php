@@ -140,7 +140,11 @@
                             <tr>
                                 <td>
                                     <div class="cli-name-wrap">
-                                        <div class="cli-avatar">{{ strtoupper(substr($client->prenom,0,1)) }}</div>
+                                        @if($client->photo)
+                                            <img src="{{ asset('storage/'.$client->photo) }}" class="cli-avatar" style="object-fit:cover;" alt="">
+                                        @else
+                                            <div class="cli-avatar">{{ strtoupper(substr($client->prenom,0,1)) }}</div>
+                                        @endif
                                         <div>
                                             <div class="cli-name">{{ $client->fullName() }}</div>
                                             <div class="cli-email">{{ $client->email }}</div>

@@ -511,7 +511,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     const label = document.createElement('div');
                     label.className = 'esthe-option-res';
                     const initials = esthe.nom.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-                    label.innerHTML = `<div class="esthe-top"><div class="esthe-av">${initials}</div><div style="flex:1;"><div class="esthe-name">${esthe.nom}</div><div class="esthe-exp">${esthe.experience} year(s) of experience</div>${esthe.specialites?`<div class="esthe-spec">${esthe.specialites}</div>`:''}</div><a href="/client/estheticiennes/${esthe.id}" style="padding:5px 12px;border-radius:20px;background:rgba(180,128,255,0.08);color:#b480ff;font-size:11px;font-weight:600;text-decoration:none;border:1.5px solid rgba(180,128,255,0.2);margin-right:8px;flex-shrink:0;">Profile</a><div class="esthe-radio"></div></div>`;
+                    const avatarHtml = esthe.photo
+                        ? `<img src="${esthe.photo}" class="esthe-av" style="object-fit:cover;" alt="">`
+                        : `<div class="esthe-av">${initials}</div>`;
+                    label.innerHTML = `<div class="esthe-top">${avatarHtml}<div style="flex:1;"><div class="esthe-name">${esthe.nom}</div><div class="esthe-exp">${esthe.experience} year(s) of experience</div>${esthe.specialites?`<div class="esthe-spec">${esthe.specialites}</div>`:''}</div><a href="/client/estheticiennes/${esthe.id}" style="padding:5px 12px;border-radius:20px;background:rgba(180,128,255,0.08);color:#b480ff;font-size:11px;font-weight:600;text-decoration:none;border:1.5px solid rgba(180,128,255,0.2);margin-right:8px;flex-shrink:0;">Profile</a><div class="esthe-radio"></div></div>`;
                     estheContent.appendChild(label);
                 });
 

@@ -231,15 +231,36 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:#faf8ff; }
                         <div class="svc-item-price">{{ number_format($svc->pivot->prix_au_moment,0,',',' ') }} DA</div>
                     </div>
                 @endforeach
-                @php $reduction = $rendezVous->prix_original - $rendezVous->prix_final; @endphp
+                @php
+                    $reduction = $rendezVous->prix_original - $rendezVous->prix_final;
+                    $reductionFideliteAffichage = \App\Services\FideliteService::reductionPourcent($rendezVous->client);
+                    $montantFidelite = (int) round($rendezVous->prix_final * $reductionFideliteAffichage / 100);
+                    $montantHT = $rendezVous->prix_final - $montantFidelite;
+                    $tauxTva = (float) (\App\Models\Institut::instance()->taux_tva ?? 19.00);
+                    $montantTva = (int) round($montantHT * $tauxTva / 100);
+                    $totalTTC = $montantHT + $montantTva;
+                @endphp
                 @if($reduction > 0)
                     <div class="promo-badge">
                         <i class="fa-solid fa-tag"></i> Promo code applied — {{ number_format($reduction,0,',',' ') }} DA saved!
                     </div>
                 @endif
+                @if($montantFidelite > 0)
+                    <div class="promo-badge">
+                        <i class="fa-solid fa-medal"></i> Loyalty discount ({{ $reductionFideliteAffichage }}%) — {{ number_format($montantFidelite,0,',',' ') }} DA saved!
+                    </div>
+                @endif
+                <div class="svc-total" style="border-top:none; padding-top:0; margin-top:8px;">
+                    <div style="font-size:13px; color:#6b7280;">Amount excl. VAT</div>
+                    <div style="font-size:13px; font-weight:700; color:#1a1a2e;">{{ number_format($montantHT,0,',',' ') }} DA</div>
+                </div>
+                <div class="svc-total" style="border-top:none; padding-top:0; margin-top:4px;">
+                    <div style="font-size:13px; color:#6b7280;">VAT ({{ number_format($tauxTva,0) }}%)</div>
+                    <div style="font-size:13px; font-weight:700; color:#1a1a2e;">{{ number_format($montantTva,0,',',' ') }} DA</div>
+                </div>
                 <div class="svc-total">
                     <div class="svc-total-label">Total</div>
-                    <div class="svc-total-value">{{ number_format($rendezVous->prix_final,0,',',' ') }} DA</div>
+                    <div class="svc-total-value">{{ number_format($totalTTC,0,',',' ') }} DA</div>
                 </div>
             </div>
 
@@ -331,7 +352,7 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:#faf8ff; }
                         <div class="rdvs-timeline-dot"></div>
                         <div class="rdvs-timeline-text">
                             <strong>Total Price</strong>
-                            {{ number_format($rendezVous->prix_final,0,',',' ') }} DA
+                            {{ number_format($totalTTC,0,',',' ') }} DA
                         </div>
                     </div>
                     <div class="rdvs-timeline-item">

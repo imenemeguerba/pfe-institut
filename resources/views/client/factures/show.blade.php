@@ -241,6 +241,12 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:#faf8ff; }
 
             {{-- TOTALS --}}
             <div class="fcs-totals">
+                @if($facture->estDeRdv() && $facture->reduction_fidelite > 0)
+                    <div class="fcs-total-row">
+                        <span class="fcs-total-row-label">Loyalty discount</span>
+                        <span class="fcs-total-row-value">- {{ number_format($facture->reduction_fidelite,0,',',' ') }} DA</span>
+                    </div>
+                @endif
                 <div class="fcs-total-row">
                     <span class="fcs-total-row-label">Subtotal (excl. VAT)</span>
                     <span class="fcs-total-row-value">{{ number_format($facture->montant_ht,0,',',' ') }} DA</span>

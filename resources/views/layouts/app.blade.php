@@ -273,10 +273,7 @@
                         </a>
                         <a href="{{ route('admin.factures.index') }}" class="sb-link {{ request()->routeIs('admin.factures.*') ? 'active' : '' }}"><i class="fa-solid fa-file-invoice"></i> Invoices</a>
                         <a href="{{ route('admin.institut.edit') }}" class="sb-link {{ request()->routeIs('admin.institut.*') ? 'active' : '' }}"><i class="fa-solid fa-building"></i> Institut</a>
-                        <a href="{{ route('admin.demandes-suppression.index') }}" class="sb-link {{ request()->routeIs('admin.demandes-suppression.*') ? 'active' : '' }}">
-                            <i class="fa-solid fa-trash"></i> Deletions
-                            @if($sbDel > 0)<span class="sb-badge">{{ $sbDel }}</span>@endif
-                        </a>
+                          
                     </div>
 
                 @elseif(Auth::user()->role === 'estheticienne')

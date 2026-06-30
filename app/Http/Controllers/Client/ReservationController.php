@@ -86,6 +86,7 @@ class ReservationController extends Controller
                     'nom'         => $e->fullName(),
                     'experience'  => $e->experience,
                     'specialites' => $e->specialites,
+                    'photo'       => $e->photo ? asset('storage/' . $e->photo) : null,
                 ])->values(),
                 'duree_totale' => $dureeTotale,
                 'prix_total'   => $prixTotal,

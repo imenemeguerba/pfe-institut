@@ -223,6 +223,9 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
             </tbody>
         </table>
     </div>
+
+    {{-- LOYALTY DISCOUNT --}}
+
 @endif
 
 {{-- ══ DÉTAILS COMMANDE ══ --}}
@@ -267,6 +270,12 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
 {{-- ══ TOTAUX ══ --}}
 <div class="totaux-wrap">
     <div class="totaux-inner">
+        @if($facture->estDeRdv() && $facture->reduction_fidelite > 0)
+            <div class="total-row tva">
+                <div class="total-row-label">Loyalty discount</div>
+                <div class="total-row-value">- {{ number_format($facture->reduction_fidelite, 0, ',', ' ') }} DA</div>
+            </div>
+        @endif
         <div class="total-row ht">
             <div class="total-row-label">Amount excl. VAT</div>
             <div class="total-row-value">{{ number_format($facture->montant_ht, 0, ',', ' ') }} DA</div>
@@ -281,6 +290,7 @@ table tbody td:last-child { text-align:right; font-weight:bold; color:#b480ff; }
         </div>
     </div>
 </div>
+
 
 {{-- ══ MERCI ══ --}}
 <div class="thank-wrap">

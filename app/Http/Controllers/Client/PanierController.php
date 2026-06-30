@@ -27,7 +27,7 @@ class PanierController extends Controller
     public function ajouter(Request $request, Produit $produit): RedirectResponse
     {
         if (!$produit->actif) {
-            return back()->with('error', 'Ce produit n\'est pas disponible.');
+            return back()->with('error', 'This product is not available.');
         }
 
         $request->validate(['quantite' => ['nullable', 'integer', 'min:1', 'max:20']]);
@@ -43,7 +43,7 @@ class PanierController extends Controller
                 ->firstOrFail();
 
             if ($variante->stock <= 0) {
-                return back()->with('error', 'Stock insuffisant pour cette variante.');
+                return back()->with('error', 'Insufficient stock for this variant.');
             }
 
             // Chercher si déjà dans panier avec même variante
@@ -54,7 +54,7 @@ class PanierController extends Controller
             $newQte = ($existing ? $existing->pivot->quantite : 0) + $qte;
 
             if ($newQte > $variante->stock) {
-                return back()->with('error', "Stock insuffisant. Maximum disponible : {$variante->stock}.");
+                return back()->with('error', "Insufficient stock. Maximum available : {$variante->stock}.");
             }
 
             if ($existing) {
@@ -67,19 +67,19 @@ class PanierController extends Controller
                 ]);
             }
 
-            return back()->with('success', "✅ {$produit->nom} ({$variante->nom}) ajouté au panier.");
+            return back()->with('success', "✅ {$produit->nom} ({$variante->nom})added to cart.");
         }
 
         // ── Sans variante ──
         if ($produit->stock <= 0) {
-            return back()->with('error', 'Ce produit n\'est pas disponible.');
+            return back()->with('error', 'This product is not available.');
         }
 
         $existing = $panier->produits->find($produit->id);
         $newQte   = ($existing ? $existing->pivot->quantite : 0) + $qte;
 
         if ($newQte > $produit->stock) {
-            return back()->with('error', "Stock insuffisant. Maximum disponible : {$produit->stock}.");
+            return back()->with('error', "Insufficient stock. Maximum available : {$produit->stock}.");
         }
 
         if ($existing) {
@@ -88,7 +88,7 @@ class PanierController extends Controller
             $panier->produits()->attach($produit->id, ['quantite' => $qte]);
         }
 
-        return back()->with('success', "✅ {$produit->nom} ajouté au panier.");
+        return back()->with('success', "✅ {$produit->nom}added to cart.");
     }
 
     public function modifier(Request $request, Produit $produit): RedirectResponse
@@ -99,28 +99,28 @@ class PanierController extends Controller
 
         if ($qte === 0) {
             $panier->produits()->detach($produit->id);
-            return back()->with('success', 'Produit retiré du panier.');
+            return back()->with('success', 'Product removed from cart.');
         }
 
         if ($qte > $produit->stock) {
-            return back()->with('error', "Stock insuffisant. Maximum : {$produit->stock}.");
+            return back()->with('error', "Insufficient stock. Maximum : {$produit->stock}.");
         }
 
         $panier->produits()->syncWithoutDetaching([$produit->id => ['quantite' => $qte]]);
-        return back()->with('success', 'Panier mis à jour.');
+        return back()->with('success', 'Cart updated.');
     }
 
     public function retirer(Request $request, Produit $produit): RedirectResponse
     {
         $panier = $this->getPanier($request->user()->id);
         $panier->produits()->detach($produit->id);
-        return back()->with('success', 'Produit retiré du panier.');
+        return back()->with('success', 'Product removed from cart.');
     }
 
     public function vider(Request $request): RedirectResponse
     {
         $panier = $this->getPanier($request->user()->id);
         $panier->produits()->detach();
-        return back()->with('success', 'Panier vidé.');
+        return back()->with('success', 'Cart cleared.');
     }
 }

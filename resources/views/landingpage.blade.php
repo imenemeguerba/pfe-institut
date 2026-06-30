@@ -223,10 +223,41 @@
         </div>
     </div>
 
-    <div class="hero-image">
+      <div class="hero-image">
         <img src="{{ asset('images/inst.png') }}" alt="Glow Institute">
     </div>
 </section>
+
+{{-- PROMO CODES BANNER --}}
+@auth
+@if(Auth::user()->isClient() && $codesPromo->isNotEmpty())
+<section style="background:linear-gradient(135deg,#b480ff,#d3aa95);padding:14px 5%;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;text-align:center;">
+        <span style="color:white;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;">
+            <i class="fa-solid fa-tag"></i> Active Offers:
+        </span>
+        @foreach($codesPromo as $code)
+            <span style="background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.4);border-radius:20px;padding:6px 16px;color:white;font-size:13px;font-weight:700;">
+                {{ $code->code }} —
+                @if($code->type_reduction === 'pourcentage')
+                    {{ $code->valeur }}% off
+                @else
+                    {{ number_format($code->valeur, 0, ',', ' ') }} DA off
+                @endif
+                on
+                @if($code->applicable_a === 'services')
+                    services
+                @elseif($code->applicable_a === 'produits')
+                    products
+                @else
+                    services & products
+                @endif
+            </span>
+        @endforeach
+    </div>
+</section>
+@endif
+@endauth
 
 {{-- WHY CHOOSE US --}}
 <section class="section section-light">
@@ -728,15 +759,15 @@ function toggleFavori(btn, produitId) {
                 @endif
             </div>
             <div class="social-links footer-socials" style="display:flex;gap:10px;margin-top:12px;">
-              <a href="{{ $institut->instagram ?? '#' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
-                  <i class="fa-brands fa-instagram"></i>
-              </a>
-              <a href="{{ $institut->facebook ?? '#' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
-                  <i class="fa-brands fa-facebook-f"></i>
-              </a>
-              <a href="{{ $institut->whatsapp ? 'https://wa.me/'.preg_replace('/[^0-9]/', '', $institut->whatsapp) : '#' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
-                   <i class="fa-brands fa-whatsapp"></i>
-              </a>
+              <a href="{{ $institut->instagram ?? 'https://www.instagram.com/glow_institute.app' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
+    <i class="fa-brands fa-instagram"></i>
+</a>
+<a href="{{ $institut->facebook ?? 'https://www.facebook.com/profile.php?id=61591454373028' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
+    <i class="fa-brands fa-facebook-f"></i>
+</a>
+<a href="{{ $institut->whatsapp ? 'https://wa.me/'.preg_replace('/[^0-9]/', '', $institut->whatsapp) : 'https://wa.me/213556252790' }}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#b480ff,#d3aa95);color:white;font-size:16px;text-decoration:none;">
+     <i class="fa-brands fa-whatsapp"></i>
+</a>
            </div>
         </div>
         <div class="map-container">
@@ -762,11 +793,11 @@ function toggleFavori(btn, produitId) {
         <div class="footer-brand">
             <h2>{{ $institut->nom ?? 'Glow Institute' }}</h2>
             <p>Your trusted partner in beauty and wellness.</p>
-            <div class="social-links footer-socials">
-                <a href="{{ $institut->instagram ?? '#' }}" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-                <a href="{{ $institut->facebook ?? '#' }}" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="{{ $institut->whatsapp ? 'https://wa.me/'.preg_replace('/[^0-9]/', '', $institut->whatsapp) : '#' }}" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
-            </div>
+           <div class="social-links footer-socials">
+    <a href="{{ $institut->instagram ?: 'https://www.instagram.com/glow_institute.app' }}" target="_blank" ...>
+<a href="{{ $institut->facebook ?: 'https://www.facebook.com/profile.php?id=61591454373028' }}" target="_blank" ...>
+    <a href="{{ $institut->whatsapp ? 'https://wa.me/'.preg_replace('/[^0-9]/', '', $institut->whatsapp) : 'https://wa.me/213556252790' }}" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+</div>
         </div>
 
         {{-- QUICK LINKS --}}

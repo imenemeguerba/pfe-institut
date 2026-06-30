@@ -122,16 +122,38 @@
                 <div class="service-price">{{ number_format($service->pivot->prix_au_moment, 0, ',', ' ') }} DA</div>
             </div>
         @endforeach
-        @php $reduction = $rendezVous->prix_original - $rendezVous->prix_final; @endphp
+        @php
+            $reduction = $rendezVous->prix_original - $rendezVous->prix_final;
+            $reductionFideliteAffichage = \App\Services\FideliteService::reductionPourcent($rendezVous->client);
+            $montantFidelite = (int) round($rendezVous->prix_final * $reductionFideliteAffichage / 100);
+            $montantHT = $rendezVous->prix_final - $montantFidelite;
+            $tauxTva = (float) (\App\Models\Institut::instance()->taux_tva ?? 19.00);
+            $montantTva = (int) round($montantHT * $tauxTva / 100);
+            $totalTTC = $montantHT + $montantTva;
+        @endphp
         @if($reduction > 0)
             <div class="promo-box">
                 <i class="fa-solid fa-tag"></i>
                 Promo code <strong>{{ $rendezVous->codePromo?->code }}</strong> : -{{ number_format($reduction, 0, ',', ' ') }} DA
             </div>
         @endif
+        @if($montantFidelite > 0)
+            <div class="promo-box">
+                <i class="fa-solid fa-medal"></i>
+                Loyalty discount ({{ $reductionFideliteAffichage }}%) : -{{ number_format($montantFidelite, 0, ',', ' ') }} DA
+            </div>
+        @endif
+        <div class="total-row" style="border-top:none; padding-top:0; margin-top:8px;">
+            <div style="font-size:13px; color:#6b7280;">Amount excl. VAT</div>
+            <div style="font-size:13px; font-weight:700; color:#1a1a2e;">{{ number_format($montantHT, 0, ',', ' ') }} DA</div>
+        </div>
+        <div class="total-row" style="border-top:none; padding-top:0; margin-top:4px;">
+            <div style="font-size:13px; color:#6b7280;">VAT ({{ number_format($tauxTva, 0) }}%)</div>
+            <div style="font-size:13px; font-weight:700; color:#1a1a2e;">{{ number_format($montantTva, 0, ',', ' ') }} DA</div>
+        </div>
         <div class="total-row">
             <div class="total-label">Total Paid</div>
-            <div class="total-amount">{{ number_format($rendezVous->prix_final, 0, ',', ' ') }} DA</div>
+            <div class="total-amount">{{ number_format($totalTTC, 0, ',', ' ') }} DA</div>
         </div>
     </div>
 

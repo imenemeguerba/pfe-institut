@@ -15,7 +15,7 @@ class CodePromoRequest extends FormRequest
 
     public function rules(): array
     {
-        $codeId = $this->route('code_promo')?->id;
+        $codeId = $this->route('codePromo')?->id;
 
         return [
             'code' => ['required', 'string', 'max:50', Rule::unique('codes_promo', 'code')->ignore($codeId)],

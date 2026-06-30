@@ -126,34 +126,7 @@ textarea.f-input { resize:vertical; min-height:90px; }
                     <label class="f-label" for="description">Description</label>
                     <textarea class="f-input" id="description" name="description" maxlength="2000">{{ old('description', $institut->description) }}</textarea>
                 </div>
-                <div class="f-label">Logo</div>
-                <div class="logo-section">
-                    @if($institut->logo)
-                        <img src="{{ asset('storage/'.$institut->logo) }}" class="logo-preview" id="logoPreview" alt="Logo">
-                        <div class="logo-placeholder" id="logoPlaceholder" style="display:none;"><i class="fa-solid fa-image"></i></div>
-                    @else
-                        <img class="logo-preview" id="logoPreview" style="display:none;" alt="Logo">
-                        <div class="logo-placeholder" id="logoPlaceholder"><i class="fa-solid fa-image"></i></div>
-                    @endif
-                    <div class="logo-upload-right">
-                        <input type="hidden" name="supprimer_logo" id="supprimerLogo" value="0">
-                        <label class="logo-drop" for="logoInput">
-                            <i class="fa-solid fa-cloud-arrow-up"></i>
-                            <div class="logo-drop-text">
-                                <h4 id="logoLabel">{{ $institut->logo ? 'Replace logo' : 'Upload logo' }}</h4>
-                                <p>JPG, PNG or WebP — Max 2 MB</p>
-                            </div>
-                            <input type="file" id="logoInput" name="logo" accept="image/*"
-                                onchange="document.getElementById('logoLabel').textContent = this.files[0] ? this.files[0].name : 'Upload logo'">
-                        </label>
-                        @if($institut->logo)
-                            <button type="button" class="btn-del-logo" id="btnDelLogo" onclick="deleteLogo()">
-                                <i class="fa-solid fa-trash"></i> Delete Logo
-                            </button>
-                        @endif
-                        @error('logo')<p class="f-error">{{ $message }}</p>@enderror
-                    </div>
-                </div>
+
             </div>
         </div>
 

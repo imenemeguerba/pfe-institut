@@ -22,6 +22,7 @@ class Facture extends Model
         'rendez_vous_id',
         'commande_id',
         'montant_ht',
+        'reduction_fidelite',
         'montant_tva',
         'montant_ttc',
         'taux_tva',
@@ -34,6 +35,7 @@ class Facture extends Model
      */
     protected $casts = [
         'montant_ht' => 'integer',
+        'reduction_fidelite' => 'integer',
         'montant_tva' => 'integer',
         'montant_ttc' => 'integer',
         'taux_tva' => 'decimal:2',

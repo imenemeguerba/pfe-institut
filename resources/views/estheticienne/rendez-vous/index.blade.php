@@ -245,7 +245,7 @@
                         <tr>
                             <th>Client</th>
                             <th>Date & Time</th>
-                            <th>Services</th>
+                            <th>Services       &          category</th>
                             <th>Duration / Price</th>
                             <th>Status</th>
                             <th class="tr"></th>
@@ -260,7 +260,11 @@
                             <tr>
                                 <td>
                                     <div style="display:flex;align-items:center;gap:10px;">
-                                        <div class="client-av">{{ strtoupper(substr($rdv->client->prenom,0,1)) }}</div>
+                                        @if($rdv->client->photo)
+                                            <img src="{{ asset('storage/'.$rdv->client->photo) }}" class="client-av" style="object-fit:cover;" alt="">
+                                        @else
+                                            <div class="client-av">{{ strtoupper(substr($rdv->client->prenom,0,1)) }}</div>
+                                        @endif
                                         <div>
                                             <div class="client-name">{{ $rdv->client->fullName() }}</div>
                                             <div class="client-sub">{{ $rdv->client->telephone ?? $rdv->client->email }}</div>

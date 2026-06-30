@@ -121,6 +121,12 @@
     {{-- TOTALS --}}
     <div class="fac-card">
         <div class="fac-card-title"><i class="fa-solid fa-receipt"></i> Summary</div>
+        @if($facture->estDeRdv() && $facture->reduction_fidelite > 0)
+            <div class="total-row">
+                <span>Loyalty discount</span>
+                <span>- {{ number_format($facture->reduction_fidelite, 0, ',', ' ') }} DA</span>
+            </div>
+        @endif
         <div class="total-row">
             <span>Amount (excl. VAT)</span>
             <span>{{ number_format($facture->montant_ht, 0, ',', ' ') }} DA</span>

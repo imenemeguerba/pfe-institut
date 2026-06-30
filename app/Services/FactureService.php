@@ -6,6 +6,7 @@ use App\Models\Facture;
 use App\Models\Commande;
 use App\Models\Institut;
 use App\Models\RendezVous;
+use App\Services\FideliteService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -26,8 +27,12 @@ class FactureService
         $institut = Institut::instance();
         $taux     = (float) ($institut->taux_tva ?? 19.00);
 
-        // ✅ prix_final = HT (le prix stocké est hors TVA)
-        $ht      = $rdv->prix_final;
+        // ✅ Réduction fidélité appliquée sur le prix après code promo
+        $reductionPourcent  = FideliteService::reductionPourcent($rdv->client);
+        $reductionFidelite  = (int) round($rdv->prix_final * $reductionPourcent / 100);
+
+        // ✅ prix_final = HT (le prix stocké est hors TVA), réduction fidélité déduite
+        $ht      = $rdv->prix_final - $reductionFidelite;
         $tva     = (int) round($ht * $taux / 100);
         $ttc     = $ht + $tva;
 
@@ -36,16 +41,17 @@ class FactureService
         $rdv->load(['client', 'estheticienne', 'services', 'codePromo']);
 
         $facture = Facture::create([
-            'numero'          => $numero,
-            'client_id'       => $rdv->client_id,
-            'type'            => 'rendez_vous',
-            'rendez_vous_id'  => $rdv->id,
-            'commande_id'     => null,
-            'montant_ht'      => $ht,
-            'montant_tva'     => $tva,
-            'montant_ttc'     => $ttc,
-            'taux_tva'        => $taux,
-            'date_emission'   => now(),
+            'numero'              => $numero,
+            'client_id'           => $rdv->client_id,
+            'type'                => 'rendez_vous',
+            'rendez_vous_id'      => $rdv->id,
+            'commande_id'         => null,
+            'montant_ht'          => $ht,
+            'reduction_fidelite'  => $reductionFidelite,
+            'montant_tva'         => $tva,
+            'montant_ttc'         => $ttc,
+            'taux_tva'            => $taux,
+            'date_emission'       => now(),
         ]);
 
         $pdf  = Pdf::loadView('pdf.facture', compact('facture', 'rdv', 'institut'));

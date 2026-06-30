@@ -297,18 +297,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
             </div>
         </div>
 
-        {{-- DANGER ZONE --}}
-        @if(Auth::user()->isClient() || Auth::user()->isEstheticienne())
-        <div class="p-card" id="danger" style="border-color:rgba(239,68,68,0.15);">
-            <div class="p-card-header">
-                <div class="p-card-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                <span class="p-card-title">Danger Zone</span>
-            </div>
-            <div class="p-card-body">
-                @include('profile.partials.demande-suppression-form')
-            </div>
-        </div>
-        @endif
+         
 
     </div>
 </div>
